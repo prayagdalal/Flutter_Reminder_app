@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reminder_app/presentation/Remainder/repeating_type_widget/every_widget.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
 import 'package:day_picker/day_picker.dart';
@@ -29,28 +30,7 @@ Widget week_type() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          CustomText(
-            text: "Every",
-          ),
-          Container(
-            width: 130,
-            child: TextFormField(
-              maxLength: 2,
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: green),
-                ),
-              ),
-            ),
-          ),
-          CustomText(
-            text: "Week",
-          ),
-        ],
-      ),
+     frequency_input("Week"),
       Padding(
         padding: const EdgeInsets.only(left: 22.0),
         child: CustomText(

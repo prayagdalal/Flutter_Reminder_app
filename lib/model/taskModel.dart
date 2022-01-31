@@ -15,13 +15,7 @@ class TaskModel {
     this.taskId,
     this.taskTitle,
     this.categoryName,
-    this.isMinute,
-    this.isHourly,
-    this.isDaily,
-    this.isWeekly,
-    this.isMonthly,
-    this.isYearly,
-    this.isCustom,
+    this.reminderType,
     this.isRepeat,
     this.isSnoozed,
     this.frequency,
@@ -41,13 +35,7 @@ class TaskModel {
   int? taskId;
   String? taskTitle;
   String? categoryName;
-  int? isMinute;
-  int? isHourly;
-  int? isDaily;
-  int? isWeekly;
-  int? isMonthly;
-  int? isYearly;
-  int? isCustom;
+  String? reminderType;
   int? isRepeat;
   int? isSnoozed;
   int? frequency;
@@ -68,13 +56,8 @@ class TaskModel {
         taskTitle: json["task_title"] == null ? null : json["task_title"],
         categoryName:
             json["category_name"] == null ? null : json["category_name"],
-        isMinute: json["isMinute"] == null ? null : json["isMinute"],
-        isHourly: json["isHourly"] == null ? null : json["isHourly"],
-        isDaily: json["isDaily"] == null ? null : json["isDaily"],
-        isWeekly: json["isWeekly"] == null ? null : json["isWeekly"],
-        isMonthly: json["isMonthly"] == null ? null : json["isMonthly"],
-        isYearly: json["isYearly"] == null ? null : json["isYearly"],
-        isCustom: json["isCustom"] == null ? null : json["isCustom"],
+        reminderType:
+            json["reminderType"] == null ? null : json["reminderType"],
         isRepeat: json["isRepeat"] == null ? null : json["isRepeat"],
         isSnoozed: json["isSnoozed"] == null ? null : json["isSnoozed"],
         frequency: json["frequency"] == null ? null : json["frequency"],
@@ -100,13 +83,7 @@ class TaskModel {
         "task_id": taskId == null ? null : taskId,
         "task_title": taskTitle == null ? null : taskTitle,
         "category_name": categoryName == null ? null : categoryName,
-        "isMinute": isMinute == null ? null : isMinute,
-        "isHourly": isHourly == null ? null : isHourly,
-        "isDaily": isDaily == null ? null : isDaily,
-        "isWeekly": isWeekly == null ? null : isWeekly,
-        "isMonthly": isMonthly == null ? null : isMonthly,
-        "isYearly": isYearly == null ? null : isYearly,
-        "isCustom": isCustom == null ? null : isCustom,
+        "reminderType": reminderType == null ? null : reminderType,
         "isRepeat": isRepeat == null ? null : isRepeat,
         "isSnoozed": isSnoozed == null ? null : isSnoozed,
         "frequency": frequency == null ? null : frequency,

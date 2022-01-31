@@ -3,13 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:reminder_app/controller/add_taskController.dart';
-import 'package:reminder_app/controller/task_controller.dart';
+import 'package:reminder_app/controller/setting_controller.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/custom.dart';
-import 'package:reminder_app/presentation/Remainder/repeating_type_widget/daily.dart';
-import 'package:reminder_app/presentation/Remainder/repeating_type_widget/hourly.dart';
-import 'package:reminder_app/presentation/Remainder/repeating_type_widget/minute.dart';
+import 'package:reminder_app/presentation/Remainder/repeating_type_widget/every_widget.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/month.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/week.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/year.dart';
@@ -61,12 +58,13 @@ List<dynamic> remindertype = [
   {"name": "Custom", "isSelected": false},
 ];
 var addTaskController = Get.put(AddTaskController());
+var settingController = Get.put(SettingController());
 
 Widget remainder_body(ctx) {
   // AddTaskController addTaskController = AddTaskController();
-  print(addTaskController.reminderType.value);
   var parsedDate = DateTime.parse(addTaskController.currentTime.value);
   String formattedDate = DateFormat('EE, dd MMM, h:mm a').format(parsedDate);
+
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
@@ -104,7 +102,7 @@ Widget remainder_body(ctx) {
                             child: Obx(
                           () => DropdownButton(
                             hint: CustomText(
-                              text: " Select Category",
+                              text: "Select Category",
                               color: grey,
                             ),
                             isExpanded: true,
@@ -130,10 +128,10 @@ Widget remainder_body(ctx) {
                       ),
                     ),
                     SizedBox(
-                      height: 8,
+                      height: 15,
                     ),
                     CustomText(
-                      text: 'Task Title',
+                      text: 'Reminder Title',
                       weight: FontWeight.w500,
                       color: black,
                     ),
@@ -142,31 +140,29 @@ Widget remainder_body(ctx) {
                     ),
                     TextFormField(
                       textInputAction: TextInputAction.done,
-                      // controller: _titleController,
-
+                      controller: addTaskController.reminderTitleController,
                       decoration: getTextBorder(),
-
                       // The validator receives the text that the user has entered.
-                      // validator: (value) {
-                      //   if (value.isEmpty) {
-                      //     return 'Please enter some text';
-                      //   }
-                      //   return null;
-                      // },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Enter Reminder Title';
+                        }
+                        return null;
+                      },
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CustomText(
                           text: 'Alarm at: ' + formattedDate,
                           size: 16,
-                          weight: FontWeight.w800,
-                          color: green,
+                          weight: FontWeight.w700,
+                          color: black,
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 13),
                     CustomText(
                       text: "Repeat type",
                       weight: FontWeight.w500,
@@ -208,7 +204,7 @@ Widget remainder_body(ctx) {
                         )),
                       ),
                     ),
-                    Obx(() => _renderWidget()),
+                    Obx(() => _renderWidget(ctx)),
                     SizedBox(
                       height: 8,
                     ),
@@ -222,18 +218,36 @@ Widget remainder_body(ctx) {
                     ),
                     TextFormField(
                       textInputAction: TextInputAction.done,
-                      // controller: _titleController,
-
+                      controller: addTaskController.reminderNoteController,
                       decoration: getTextBorder(),
                       maxLines: 5,
-
-                      // The validator receives the text that the user has entered.
-                      // validator: (value) {
-                      //   if (value.isEmpty) {
-                      //     return 'Please enter some text';
-                      //   }
-                      //   return null;
-                      // },
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    ListTile(
+                        onTap: null,
+                        contentPadding: EdgeInsets.zero,
+                        //leading: Icon(Icons.snooze_outlined),
+                        title: CustomText(
+                          text: "Snooze",
+                          weight: FontWeight.w500,
+                        ),
+                        dense: true,
+                        trailing: Obx(() => Switch(
+                            value: settingController.snoozeflag.value,
+                            onChanged: (val) {
+                              settingController.snoozechange();
+                              print(settingController.snoozeflag);
+                            }))),
+                    Visibility(
+                      visible: true,
+                      child: Column(
+                        children: [
+                          // addRadioButton(0, '1 Minutes', '1 Minutes'),
+                          // addRadioButton(1, '5 Minutes', '5 Minutes'),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -269,26 +283,45 @@ InputDecoration getTextBorder() {
   );
 }
 
-Widget _renderWidget() {
-  if (addTaskController.reminderType.value == "Daily")
-    return daily_type();
+Widget _renderWidget(ctx) {
+  if (addTaskController.reminderType.value == "Daiiiply")
+    return frequency_input("Day");
   else if (addTaskController.reminderType.value == "Minute")
-    return minute_type();
+    return frequency_input("Minute");
   else if (addTaskController.reminderType.value == "Hourly")
-    return hour_type();
+    return frequency_input("Hour");
   else if (addTaskController.reminderType.value == "Weekly")
     return week_type();
   else if (addTaskController.reminderType.value == "Monthly")
-    return month_type(context);
+    return month_type(ctx);
   else if (addTaskController.reminderType.value == "Yearly")
-    return year_type(context);
+    return year_type(ctx);
   else
-    return custom_type(context);
+    return custom_type(ctx);
 }
-  // "Minute",
-  // "Hourly",
-  // "Daily",
-  // "Weekly",
-  // "Monthly",
-  // "Yearly",
-  // "Custom"
+// "Minute",
+// "Hourly",
+// "Daily",
+// "Weekly",
+// "Monthly",
+// "Yearly",
+// "Custom"
+
+addRadioButton(int btnIndex, String title, String interval) {
+  return Container(
+    child: Row(
+      children: [
+        GetBuilder<AddTaskController>(
+          builder: (_) => Radio(
+              activeColor: green,
+              value: addTaskController.gender[btnIndex],
+              groupValue: addTaskController.select,
+              onChanged: (value) {
+                addTaskController.onClickRadioButton(value);
+              }),
+        ),
+        CustomText(text: interval)
+      ],
+    ),
+  );
+}

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_app/presentation/Home/tabviewActive.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
+
+import 'activeList.dart';
 
 Widget tabBar() {
   return DefaultTabController(
@@ -35,8 +36,8 @@ Widget tabBar() {
             child: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
-            TabviewActive(),
-            Container(),
+              list(1),
+            list(0),
           ],
         ))
       ],

@@ -2,11 +2,17 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reminder_app/model/taskModel.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:convert' as convert;
+
 import 'dart:io' as io;
 
 class DBProvider {
   DBProvider._();
   static Database? _database;
+  static const SECRET_KEY = "2021_PRIVATE_KEY_ENCRYPT_2021";
+
+  List<String> tables = [];
+
   static final DBProvider db = DBProvider._();
   Future<Database> get database async =>
       _database ??= await _initiateDatabase();
@@ -15,12 +21,14 @@ class DBProvider {
     io.Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, 'reminderDB.db');
     //var db = await openDatabase(path, version: 1, onOpen: _onCreate);
-    return await openDatabase(path, version: 1, onCreate: onCreate);
+    // return await openDatabase(path, version: 1, onOpen: onCreate);
+    var db = await openDatabase(path, version: 1, onOpen: onCreate);
+    return db;
   }
 
-  Future onCreate(Database db, int dbversion) async {
-    return await db.execute(
-        'CREATE TABLE IF NOT EXISTS taskTbl (task_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,task_title TEXT,description TEXT,category_name TEXT,isMinute INTEGER DEFAULT 0,isHourly INTEGER DEFAULT 0, isDaily INTEGER DEFAULT 0,isWeekly INTEGER DEFAULT 0,isMonthly INTEGER DEFAULT 0,isYearly INTEGER DEFAULT 0,isCustom INTEGER DEFAULT 0,isRepeat INTEGER DEFAULT 0,isSnoozed INTEGER DEFAULT 0,isActive INTEGER DEFAULT 0,isComplete INTEGER DEFAULT 0,frequency INTEGER,selected_days TEXT,custom_week INTEGER,custom_day INTEGER,custom_month int,time DATETIME,snooze_time INTEGER,updated_time DATETIME,isVibrated INTEGER DEFAULT 0)');
+  onCreate(Database db) async {
+    await db.execute(
+        'CREATE TABLE IF NOT EXISTS taskTbl (task_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,task_title TEXT,description TEXT,category_name TEXT,reminderType TEXT,isRepeat INTEGER DEFAULT 0,isSnoozed INTEGER DEFAULT 0,isActive INTEGER DEFAULT 0,isComplete INTEGER DEFAULT 0,frequency INTEGER,selected_days TEXT,custom_week INTEGER,custom_day INTEGER,custom_month int,time DATETIME,snooze_time INTEGER,updated_time DATETIME,isVibrated INTEGER DEFAULT 0)');
   }
 
   Future<List<TaskModel>> getTaskList() async {
@@ -34,6 +42,23 @@ class DBProvider {
     return list;
   }
 
+  deleteTbl() async {
+    final db = await database;
+
+    // db.execute("DROP TABLE groupTbl");
+    db.execute("DROP TABLE taskTbl");
+  }
+
+  getLastInsertedRowId() async {
+    final db = await database;
+    var id = await db.rawQuery(
+        'SELECT *  FROM taskTbl WHERE task_id = (SELECT MAX(task_id) FROM taskTbl)');
+    // print('in APIIII');
+    // print('----------------');
+    // print(id);
+    return id;
+  }
+
   addTask(TaskModel task) async {
     final db = await database;
     await db.insert('taskTbl', task.toJson());
@@ -44,10 +69,41 @@ class DBProvider {
     return db.delete("taskTbl", where: "task_id = ?", whereArgs: [id]);
   }
 
-  updateBatch(TaskModel taskObj) async {
+  updateTask(TaskModel taskObj) async {
     final db = await database;
     var res = db.update("taskTbl", taskObj.toJson(),
         where: "task_id=?", whereArgs: [taskObj.taskId]);
     return res;
   }
+
+  // Future<String> generateBackup({bool isEncrypted = true}) async {
+  //   print('GENERATE BACKUP');
+
+  //   var dbs = await this.database;
+
+  //   List data = [];
+
+  //   List<Map<String, dynamic>> listMaps = [];
+
+  //   for (var i = 0; i < tables.length; i++) {
+  //     listMaps = await dbs.query(tables[i]);
+
+  //     data.add(listMaps);
+  //   }
+
+  //   List backups = [tables, data];
+
+  //   String json = convert.jsonEncode(backups);
+
+  //   if (isEncrypted) {
+  //     var key = encrypt.Key.fromUtf8(SECRET_KEY);
+  //     var iv = encrypt.IV.fromLength(16);
+  //     var encrypter = encrypt.Encrypter(encrypt.AES(key));
+  //     var encrypted = encrypter.encrypt(json, iv: iv);
+
+  //     return encrypted.base64;
+  //   } else {
+  //     return json;
+  //   }
+  // }
 }

@@ -1,8 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:reminder_app/presentation/Home/bottomNav.dart';
-import 'package:reminder_app/presentation/Home/home.dart';
-import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/notification_service.dart';
 
 void main() {
@@ -25,9 +25,14 @@ Map<int, Color> color = {
 };
 MaterialColor colorCustom = MaterialColor(0xff02953F, color);
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(

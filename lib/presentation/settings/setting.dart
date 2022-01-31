@@ -1,7 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:reminder_app/controller/add_taskController.dart';
+import 'package:reminder_app/controller/setting_controller.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
+
+var settingController = Get.put(SettingController());
 
 class SettingPage extends StatelessWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -39,17 +45,21 @@ Widget settinglists(ctx) {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           color: white,
           child: ListTile(
-            onTap: () {
-              showTimePicker(context: ctx, initialTime: TimeOfDay.now());
-            },
-            leading: Icon(Icons.av_timer),
-            title: CustomText(
-              text: "Set Default Time",
-              weight: FontWeight.w500,
-            ),
-            dense: true,
-            trailing: CustomText(text: "9:00 AM"),
-          ),
+              onTap: () {
+                _selectTime(ctx);
+                // showTimePicker(context: ctx, initialTime: TimeOfDay.now());
+              },
+              leading: Icon(Icons.av_timer),
+              title: CustomText(
+                text: "Set Default Time",
+                weight: FontWeight.w500,
+              ),
+              dense: true,
+            
+              trailing: Obx(() => CustomText(
+                    text: settingController.defaultTime.value,
+                    color: green,
+                  ))),
         ),
         Card(
           elevation: 0,
@@ -64,30 +74,98 @@ Widget settinglists(ctx) {
                 weight: FontWeight.w500,
               ),
               dense: true,
-              trailing: Switch(value: false, onChanged: (val) {})),
+              trailing: Obx(() => Switch(
+                  value: settingController.snoozeflag.value,
+                  onChanged: (val) {
+                    settingController.snoozechange();
+                  }))),
         ),
+        Card(
+            elevation: 0,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            color: white,
+            child: ListTile(
+                onTap: () {},
+                leading: Icon(Icons.vibration),
+                title: CustomText(
+                  text: "Vibration",
+                  weight: FontWeight.w500,
+                ),
+                dense: true,
+                trailing: Obx(() => Switch(
+                    value: settingController.vibrationflag.value,
+                    onChanged: (val) {
+                      settingController.vibrationchange();
+                    })))),
         Card(
           elevation: 0,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           color: white,
           child: ListTile(
-              onTap: () {},
-              leading: Icon(Icons.vibration),
-              title: CustomText(
-                text: "Vibration",
-                weight: FontWeight.w500,
-              ),
-              dense: true,
-              trailing: Switch(value: false, onChanged: (val) {})),
-        ),
-        Card(
-          elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          color: white,
-          child: ListTile(
-            onTap: () {},
+            onTap: () {
+              showDialog(
+                  context: ctx,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: SizedBox(
+                        height: 110,
+                        width: 130,
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              GestureDetector(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    Icon(
+                                      Icons.backup,
+                                      size: 60,
+                                      color: black,
+                                    ),
+                                    CustomText(
+                                      text: "Backup",
+                                      size: 18,
+                                      color: green,
+                                      weight: FontWeight.bold,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              VerticalDivider(
+                                thickness: 1,
+                                color: grey,
+                              ),
+                              GestureDetector(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    Icon(
+                                      Icons.restore,
+                                      size: 60,
+                                      color: black,
+                                    ),
+                                    CustomText(
+                                      text: "Restore",
+                                      size: 18,
+                                      color: green,
+                                      weight: FontWeight.bold,
+                                    ),
+                                   
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+            },
             leading: Icon(Icons.backup),
             title: CustomText(
               text: "Backup & Restore",
@@ -114,4 +192,21 @@ Widget customerow(icn, txt1, txt2) {
       ),
     ),
   );
+}
+
+TimeOfDay selectetime = TimeOfDay.now();
+_selectTime(BuildContext ctx) async {
+  final TimeOfDay? picked = await showTimePicker(
+    context: ctx,
+    initialTime: TimeOfDay.now(),
+  );
+
+  if (picked != null && picked != selectetime) {
+    DateTime tempDate = DateFormat("hh:mm")
+        .parse(picked.hour.toString() + ":" + picked.minute.toString());
+    var dateFormat = DateFormat("h:mm a");
+    settingController.defaultTime.value = dateFormat.format(tempDate);
+    // print(settingController.defaultTime.value);
+
+  }
 }

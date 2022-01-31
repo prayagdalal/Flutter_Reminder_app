@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:reminder_app/presentation/Home/bottomNav.dart';
+import 'package:reminder_app/model/taskModel.dart';
+import 'package:reminder_app/network/apis.dart';
+import 'package:reminder_app/presentation/Home/Searchbar/searchbar.dart';
 import 'package:get/get.dart';
 import 'package:reminder_app/controller/task_controller.dart';
 import 'package:reminder_app/presentation/Home/tabbar.dart';
@@ -38,7 +40,10 @@ class Home extends StatelessWidget {
               color: white,
             ),
             onPressed: () {
-              taskController.showNotification();
+              //  DBProvider.db.deleteTbl();
+              // taskController.showNotification();
+              Get.to(() => SearchBarPage());
+              //taskController.backupfilecreation();
             },
           ),
           SizedBox(
@@ -58,7 +63,10 @@ class Home extends StatelessWidget {
                 // taskController.addNewTask();
                 // taskController.fetchTasks();
                 // Get.to(add_Remainders());
-                Get.to(() => add_Remainders());
+                TaskModel addTaskObj = TaskModel();
+                Get.to(() => add_Remainders(), arguments: {
+                  "testArg": addTaskObj,
+                });
               },
             ),
           ),

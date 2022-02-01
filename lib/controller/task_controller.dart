@@ -1,11 +1,11 @@
+// ignore_for_file: unused_local_variable, unnecessary_new, avoid_print
+
 import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:reminder_app/model/taskModel.dart';
 import 'package:reminder_app/network/apis.dart';
-import 'package:reminder_app/presentation/Home/activeList.dart';
+import 'package:reminder_app/network/session.dart';
 import 'package:reminder_app/utills/notification_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -19,9 +19,6 @@ class TaskController extends GetxController {
     tasks.value = [];
     fetchTasks();
     tz.initializeTimeZones();
-    //  timer = Timer.periodic(Duration(seconds: 1), (Timer t) => fetchTasks());
-    fetchTasks();
-
     super.onInit();
   }
 
@@ -61,6 +58,11 @@ class TaskController extends GetxController {
   }
 
   editTask(TaskModel taskObj) async {
+    print('In Edit API');
     await DBProvider.db.updateTask(taskObj);
+  }
+
+  setSession(String defaultTime) {
+    SharedPrefrences.setSession('default_time', defaultTime);
   }
 }

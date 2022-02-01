@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:reminder_app/controller/add_taskController.dart';
 import 'package:reminder_app/controller/setting_controller.dart';
+import 'package:reminder_app/main.dart';
+import 'package:reminder_app/network/session.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
 
@@ -55,9 +57,8 @@ Widget settinglists(ctx) {
                 weight: FontWeight.w500,
               ),
               dense: true,
-            
               trailing: Obx(() => CustomText(
-                    text: settingController.defaultTime.value,
+                    text: settingController.defaultTime.toString(),
                     color: green,
                   ))),
         ),
@@ -155,7 +156,6 @@ Widget settinglists(ctx) {
                                       color: green,
                                       weight: FontWeight.bold,
                                     ),
-                                   
                                   ],
                                 ),
                               ),
@@ -197,9 +197,9 @@ Widget customerow(icn, txt1, txt2) {
 TimeOfDay selectetime = TimeOfDay.now();
 _selectTime(BuildContext ctx) async {
   final TimeOfDay? picked = await showTimePicker(
-    context: ctx,
-    initialTime: TimeOfDay.now(),
-  );
+      context: ctx,
+      initialTime: settingController
+          .stringToTimeOfDay(settingController.defaultTime.value));
 
   if (picked != null && picked != selectetime) {
     DateTime tempDate = DateFormat("hh:mm")
@@ -207,6 +207,6 @@ _selectTime(BuildContext ctx) async {
     var dateFormat = DateFormat("h:mm a");
     settingController.defaultTime.value = dateFormat.format(tempDate);
     // print(settingController.defaultTime.value);
-
+    taskController.setSession(dateFormat.format(tempDate));
   }
 }

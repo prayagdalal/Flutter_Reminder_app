@@ -1,13 +1,15 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, curly_braces_in_flow_control_structures
+// ignore_for_file: prefer_const_constructors, avoid_print, curly_braces_in_flow_control_structures, unused_local_variable, prefer_typing_uninitialized_variables, non_constant_identifier_names, camel_case_types
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:reminder_app/controller/task_controller.dart';
 import 'package:reminder_app/model/taskModel.dart';
+import 'package:reminder_app/network/session.dart';
 import 'package:reminder_app/presentation/Remainder/remainderBody.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
+import 'package:cron/cron.dart';
 
 class add_Remainders extends StatelessWidget {
   const add_Remainders({Key? key}) : super(key: key);
@@ -70,6 +72,8 @@ class add_Remainders extends StatelessWidget {
                   print(addTaskController.frequencyController.text);
                   var custom_week;
                   var custom_minute;
+                  var custom_hour;
+
                   DateTime weekIntoSecond;
                   if (formKey.currentState!.validate()) {
                     // print(addTaskController.reminderTitleController.text);
@@ -95,13 +99,59 @@ class add_Remainders extends StatelessWidget {
                           Duration(days: custom_week).inSeconds;
                       print(weekIntoSecond);
                       print(now);
-                      print('---------------------------------');
+                      print('-------------Weekly--------------------');
                       updatedDate = now.add(Duration(seconds: weekIntoSecond));
                       print(updatedDate);
+                      String defaultTime = '';
+                      TimeOfDay defaultTimeFinal =
+                          TimeOfDay(hour: 15, minute: 0);
+                      SharedPrefrences.getSession('default_time').then((value) {
+                        print('insesssion');
+                        defaultTime = value;
+                        defaultTimeFinal =
+                            settingController.stringToTimeOfDay(defaultTime);
+                      });
+                      var newHour = defaultTimeFinal.hour;
+                      var newMinute = defaultTimeFinal.minute;
+                      updatedDate = updatedDate.toLocal();
+                      // ignore: unnecessary_new
+                      updatedDate = new DateTime(
+                          updatedDate.year,
+                          updatedDate.month,
+                          updatedDate.day,
+                          newHour,
+                          newMinute,
+                          00,
+                          updatedDate.millisecond,
+                          updatedDate.microsecond);
+
+                      print(updatedDate);
+                    }
+                    if (addTaskController.reminderType.value == 'Minute') {
+                      custom_minute =
+                          int.parse(addTaskController.frequencyController.text);
+                      int minuteIntoSecond =
+                          Duration(minutes: custom_minute).inSeconds;
+                      print(now);
+                      print('----------------Minute-----------------');
+                      updatedDate =
+                          now.add(Duration(seconds: minuteIntoSecond));
+                      print(updatedDate);
+                      taskobj.customDay =
+                          int.parse(addTaskController.frequencyController.text);
                     }
 
-                    if (addTaskController.reminderType.value == 'Minute') {}
+                    if (addTaskController.reminderType.value == 'Hourly') {
+                      custom_hour =
+                          int.parse(addTaskController.frequencyController.text);
 
+                      int hourIntoSecond =
+                          Duration(hours: custom_hour).inSeconds;
+                      print(now);
+                      print('----------------Hourly-----------------');
+                      updatedDate = now.add(Duration(seconds: hourIntoSecond));
+                      print(updatedDate);
+                    }
                     taskobj.taskTitle =
                         addTaskController.reminderTitleController.text;
                     taskobj.categoryName =
@@ -109,6 +159,7 @@ class add_Remainders extends StatelessWidget {
                     taskobj.time = now.toString();
                     taskobj.updatedTime = updatedDate.toString();
                     taskobj.isActive = 1;
+                    taskobj.isRepeat = 1;
                     taskobj.reminderType =
                         addTaskController.reminderType.toString();
                     if (taskobj.taskId == null) {

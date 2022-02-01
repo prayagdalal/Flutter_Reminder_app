@@ -1,8 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:reminder_app/presentation/Home/home.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz;
 
 class NotificationService {
   static final NotificationService _notificationService =
@@ -22,7 +23,6 @@ class NotificationService {
         AndroidInitializationSettings('app_icon');
 
     final IOSInitializationSettings initializationSettingsIOS =
-        // ignore: prefer_const_constructors
         IOSInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -36,7 +36,7 @@ class NotificationService {
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: selectNotification,
+//      onSelectNotification: selectNotification,
     );
   }
 
@@ -69,6 +69,8 @@ class NotificationService {
             'main_channel', 'Main Channel', 'Main channel notifications',
             importance: Importance.max,
             priority: Priority.max,
+            ongoing: true,
+            fullScreenIntent: false,
             enableVibration: true,
             icon: 'app_icon'),
         iOS: IOSNotificationDetails(

@@ -3,15 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:reminder_app/controller/task_controller.dart';
 import 'package:reminder_app/model/taskModel.dart';
-import 'package:reminder_app/network/apis.dart';
 import 'package:reminder_app/presentation/Remainder/addRemainder.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
 
+import '../../main.dart';
+
 Widget list(int flag) {
-  final taskController = Get.put(TaskController());
   return
       // taskController.tasks.length <= 0
       //     ? Center(
@@ -41,7 +40,6 @@ Widget list(int flag) {
                         Get.to(() => add_Remainders(), arguments: {
                           "testArg": taskController.tasks[index],
                         });
-                        
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(
@@ -69,6 +67,7 @@ Widget list(int flag) {
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
+                                          // ignore: prefer_const_literals_to_create_immutables
                                           children: [
                                             Icon(Icons.check),
                                             SizedBox(width: 5),
@@ -118,6 +117,7 @@ Widget list(int flag) {
                                         TaskModel taskObj = TaskModel();
                                         taskObj = taskController.tasks[index];
                                         taskObj.isActive = 0;
+                                        taskObj.isRepeat = 0;
                                         // taskObj.taskId =
                                         //     taskController.tasks[index].taskId;
                                         // taskObj.time =

@@ -1,7 +1,7 @@
+// ignore_for_file: prefer_const_constructors, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import 'package:reminder_app/utills/colors.dart';
-import 'package:reminder_app/utills/customtext.dart';
-
 import 'activeList.dart';
 
 Widget tabBar() {
@@ -36,7 +36,7 @@ Widget tabBar() {
             child: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
-              list(1),
+            list(1),
             list(0),
           ],
         ))

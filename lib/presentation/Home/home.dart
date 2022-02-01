@@ -66,6 +66,7 @@ class Home extends StatelessWidget {
                   time.minute, time.second, time.millisecond, time.microsecond);
 
               print(time);
+              Get.to(() => SearchBarPage());
             },
           ),
           SizedBox(

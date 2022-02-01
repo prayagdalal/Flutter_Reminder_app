@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:reminder_app/controller/add_taskController.dart';
+import 'package:reminder_app/controller/backup_restoreController.dart';
 import 'package:reminder_app/controller/setting_controller.dart';
 import 'package:reminder_app/main.dart';
 import 'package:reminder_app/network/session.dart';
@@ -10,6 +11,7 @@ import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
 
 var settingController = Get.put(SettingController());
+var backup_restoreController = Get.put(backupRestoreController());
 
 class SettingPage extends StatelessWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -106,62 +108,69 @@ Widget settinglists(ctx) {
           color: white,
           child: ListTile(
             onTap: () {
-              showDialog(
+              showModalBottomSheet(
+                  elevation: 10,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
                   context: ctx,
                   builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: SizedBox(
-                        height: 110,
-                        width: 130,
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              GestureDetector(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  // ignore: prefer_const_literals_to_create_immutables
-                                  children: [
-                                    Icon(
-                                      Icons.backup,
-                                      size: 60,
-                                      color: black,
-                                    ),
-                                    CustomText(
-                                      text: "Backup",
-                                      size: 18,
-                                      color: green,
-                                      weight: FontWeight.bold,
-                                    ),
-                                  ],
-                                ),
+                    return FractionallySizedBox(
+                      heightFactor: 0.4,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              backup_restoreController.uploadToGoogleDrive();
+                            },
+                            child: SizedBox(
+                              height: 100,
+                              width: 120,
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.backup,
+                                    size: 50,
+                                    color: black,
+                                  ),
+                                  CustomText(
+                                    text: "Backup",
+                                    size: 18,
+                                    color: green,
+                                    weight: FontWeight.bold,
+                                  )
+                                ],
                               ),
-                              VerticalDivider(
-                                thickness: 1,
-                                color: grey,
-                              ),
-                              GestureDetector(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  // ignore: prefer_const_literals_to_create_immutables
-                                  children: [
-                                    Icon(
-                                      Icons.restore,
-                                      size: 60,
-                                      color: black,
-                                    ),
-                                    CustomText(
-                                      text: "Restore",
-                                      size: 18,
-                                      color: green,
-                                      weight: FontWeight.bold,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: () {
+                              backup_restoreController.downloadandsavefile();
+                            },
+                            child: Container(
+                              height: 100,
+                              width: 120,
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.restore,
+                                    size: 50,
+                                    color: black,
+                                  ),
+                                  CustomText(
+                                    text: "Restore",
+                                    size: 18,
+                                    color: green,
+                                    weight: FontWeight.bold,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   });

@@ -11,8 +11,11 @@ import 'package:timezone/data/latest.dart' as tz;
 
 class TaskController extends GetxController {
   var tasks = List<TaskModel>.empty(growable: true).obs;
+  var searchData = List<TaskModel>.empty(growable: true).obs;
+
   late Timer timer;
   List taskId = [];
+  late String catName = ''.obs();
 
   @override
   void onInit() {
@@ -64,5 +67,16 @@ class TaskController extends GetxController {
 
   setSession(String defaultTime) {
     SharedPrefrences.setSession('default_time', defaultTime);
+  }
+
+  fetchSearchTasks(catName) async {
+    print("Fetch search");
+    print(catName);
+    // DateTime currentDate = new DateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+    //     .parse(DateTime.now().toString());
+    DBProvider.db.getTaskByCat(catName).then((taskList) {
+      searchData.value = taskList;
+      print(searchData);
+    });
   }
 }

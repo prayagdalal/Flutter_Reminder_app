@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reminder_app/model/taskModel.dart';
+import 'package:reminder_app/network/globalFile.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:convert' as convert;
 
@@ -42,6 +43,17 @@ class DBProvider {
     return list;
   }
 
+  getdatabaselist() async {
+    name = "";
+    final db = await database;
+    var res = await db.query("taskTbl");
+    List<TaskModel> list =
+        res.isNotEmpty ? res.map((c) => TaskModel.fromJson(c)).toList() : [];
+    for (int i = 0; i < list.length; i++) {
+      name = name + list[i].toJson().toString() + ',';
+    }
+  }
+
   deleteTbl() async {
     final db = await database;
 
@@ -74,6 +86,17 @@ class DBProvider {
     var res = db.update("taskTbl", taskObj.toJson(),
         where: "task_id=?", whereArgs: [taskObj.taskId]);
     return res;
+  }
+
+   Future<List<TaskModel>> getTaskByCat(String catNm) async {
+    final db = await database;
+    var res = await db
+        .query("taskTbl", where: "category_name = ?", whereArgs: [catNm]);
+    List<TaskModel> list =
+        res.isNotEmpty ? res.map((c) => TaskModel.fromJson(c)).toList() : [];
+    print(list.length);
+
+    return list;
   }
 
   // Future<String> generateBackup({bool isEncrypted = true}) async {

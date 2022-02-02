@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unrelated_type_equality_checks, prefer_is_empty
+// ignore_for_file: prefer_const_constructors, unrelated_type_equality_checks, prefer_is_empty, avoid_print
 
 import 'dart:async';
 
@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:reminder_app/controller/task_controller.dart';
 import 'package:reminder_app/model/taskModel.dart';
+import 'package:reminder_app/network/session.dart';
 import 'package:reminder_app/presentation/Home/bottomNav.dart';
 import 'package:reminder_app/utills/notification_service.dart';
 
@@ -15,62 +16,90 @@ final taskController = Get.put(TaskController());
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationService().initNotification();
   runApp(const MyApp());
-  var cron = Cron();
-  // cron.schedule(Schedule.parse('*/1 * * * *'), () async {
-
-  // });
-
+  SharedPrefrences.getSession('default_time').then((value) {
+    if (value.isEmpty || value == '') {
+      taskController.setSession('10:00 PM');
+    }
+  });
   Timer.periodic(Duration(seconds: 1), (timer) async {
+    NotificationService().initNotification();
+
     // do something or call a function
     print('every one Second');
     if (taskController.tasks.length > 0) {
       for (var i = 0; i < taskController.tasks.length; i++) {
-        print(taskController.tasks[i].taskTitle);
-        print(DateFormat('yyyy-MM-dd hh:mm:ss')
-            .parse(taskController.tasks[i].updatedTime.toString()));
-        print(
-            DateFormat('yyyy-MM-dd hh:mm:ss').parse(DateTime.now().toString()));
+        // print(DateFormat('yyyy-MM-dd hh:mm:ss')
+        //     .parse(taskController.tasks[i].updatedTime.toString()));
+        // print(
+        //     DateFormat('yyyy-MM-dd hh:mm:ss').parse(DateTime.now().toString()));
 
-        if (taskController.tasks[i].reminderType == 'Minute' &&
-            taskController.tasks[i].customDay != null &&
-            taskController.tasks[i].isRepeat == 1) {
-          if (DateFormat('yyyy-MM-dd hh:mm:ss')
-                  .parse(taskController.tasks[i].updatedTime.toString()) ==
-              DateFormat('yyyy-MM-dd hh:mm:ss')
-                  .parse(DateTime.now().toString())) {
-            var duration = Duration(
-                    minutes:
-                        int.parse(taskController.tasks[i].customDay.toString()))
-                .inSeconds;
-            TaskModel taskobj = TaskModel();
-            DateTime stringToDateTime = DateFormat("yyyy-MM-dd hh:mm:ss")
-                .parse(taskController.tasks[i].updatedTime.toString());
-            taskobj.taskId = taskController.tasks[i].taskId;
-            taskobj.time = taskController.tasks[i].time;
-            taskobj.taskTitle = taskController.tasks[i].taskTitle;
-            taskobj.categoryName = taskController.tasks[i].categoryName;
-            taskobj.isActive = 1;
-            taskobj.isRepeat = 1;
-            taskobj.customDay = taskController.tasks[i].customDay;
-            taskobj.reminderType = taskController.tasks[i].reminderType;
-            String newpdatedTime =
-                stringToDateTime.add(Duration(seconds: duration)).toString();
-            taskobj.updatedTime = newpdatedTime;
-            await taskController.editTask(taskobj);
-            final difference = DateFormat('yyyy-MM-dd hh:mm:ss')
-                .parse(taskobj.updatedTime.toString())
-                .difference(DateTime.now())
-                .inSeconds;
-            print('Diffrence:' + difference.toString());
-            taskController.showNotification(
-                int.parse(taskController.tasks[i].taskId.toString()),
-                difference,
-                taskController.tasks[i].taskTitle.toString(),
-                'please check app');
-            taskController.fetchTasks();
-          }
+        DateTime stringToDateTime = DateFormat("yyyy-MM-dd hh:mm:ss")
+            .parse(taskController.tasks[i].updatedTime.toString());
+        if ((taskController.tasks[i].reminderType == 'Minute' &&
+                taskController.tasks[i].customMinute != null &&
+                taskController.tasks[i].isRepeat == 1) &&
+            (DateFormat('yyyy-MM-dd hh:mm:ss')
+                    .parse(taskController.tasks[i].updatedTime.toString()) ==
+                DateFormat('yyyy-MM-dd hh:mm:ss')
+                    .parse(DateTime.now().toString()))) {
+          print('in Minute-----------------------');
+          TaskModel taskobj = TaskModel();
+          taskobj.taskId = taskController.tasks[i].taskId;
+          taskobj.time = taskController.tasks[i].time;
+          taskobj.taskTitle = taskController.tasks[i].taskTitle;
+          taskobj.categoryName = taskController.tasks[i].categoryName;
+          taskobj.isActive = 1;
+          taskobj.isRepeat = 1;
+          taskobj.customMinute = taskController.tasks[i].customMinute;
+          taskobj.reminderType = taskController.tasks[i].reminderType;
+          String newpdatedTime = stringToDateTime
+              .add(Duration(
+                  seconds: int.parse(
+                      taskController.tasks[i].customMinute.toString())))
+              .toString();
+          taskobj.updatedTime = newpdatedTime;
+          await taskController.editTask(taskobj);
+          print('Diffrence OP:' +
+              taskController.tasks[i].customMinute.toString());
+          taskController.showNotification(
+              int.parse(taskController.tasks[i].taskId.toString()),
+              int.parse(taskController.tasks[i].customMinute.toString()),
+              taskController.tasks[i].taskTitle.toString(),
+              'please check app');
+          taskController.fetchTasks();
+        } else if ((taskController.tasks[i].reminderType == 'Hourly' &&
+                taskController.tasks[i].customHour != null &&
+                taskController.tasks[i].isRepeat == 1) &&
+            (DateFormat('yyyy-MM-dd hh:mm:ss')
+                    .parse(taskController.tasks[i].updatedTime.toString()) ==
+                DateFormat('yyyy-MM-dd hh:mm:ss')
+                    .parse(DateTime.now().toString()))) {
+          TaskModel taskobj = TaskModel();
+          print('in Hourly-----------------------');
+          taskobj.taskId = taskController.tasks[i].taskId;
+          taskobj.time = taskController.tasks[i].time;
+          taskobj.taskTitle = taskController.tasks[i].taskTitle;
+          taskobj.categoryName = taskController.tasks[i].categoryName;
+          taskobj.isActive = 1;
+          taskobj.isRepeat = 1;
+          taskobj.customHour = taskController.tasks[i].customHour;
+          taskobj.reminderType = taskController.tasks[i].reminderType;
+          String newpdatedTime = stringToDateTime
+              .add(Duration(
+                  seconds:
+                      int.parse(taskController.tasks[i].customHour.toString())))
+              .toString();
+          taskobj.updatedTime = newpdatedTime;
+          await taskController.editTask(taskobj);
+
+          print('Diffrence:' + taskController.tasks[i].customHour.toString());
+          taskController.showNotification(
+              int.parse(taskController.tasks[i].taskId.toString()),
+              int.parse(taskController.tasks[i].customHour.toString()),
+              taskController.tasks[i].taskTitle.toString(),
+              'please check app');
+          taskController.fetchTasks();
         }
       }
     }

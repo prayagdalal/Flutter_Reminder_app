@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'activeList.dart';
-
 Widget tabBar() {
   return DefaultTabController(
     length: 2,

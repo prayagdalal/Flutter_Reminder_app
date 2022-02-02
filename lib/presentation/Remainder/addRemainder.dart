@@ -9,11 +9,9 @@ import 'package:reminder_app/network/session.dart';
 import 'package:reminder_app/presentation/Remainder/remainderBody.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
-import 'package:cron/cron.dart';
 
 class add_Remainders extends StatelessWidget {
   const add_Remainders({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     addTaskController.reminderTitleController.clear();
@@ -30,7 +28,6 @@ class add_Remainders extends StatelessWidget {
           taskobj.taskTitle.toString();
       addTaskController.category.value = taskobj.categoryName.toString();
     }
-
     return Form(
       key: formKey,
       child: Scaffold(
@@ -62,7 +59,6 @@ class add_Remainders extends StatelessWidget {
                 // ignore: prefer_const_constructors
                 constraints: BoxConstraints.tight(Size.fromWidth(30)),
                 padding: EdgeInsets.all(0),
-
                 // ignore: prefer_const_constructors
                 icon: Icon(
                   Icons.check_circle_rounded,
@@ -73,7 +69,6 @@ class add_Remainders extends StatelessWidget {
                   var custom_week;
                   var custom_minute;
                   var custom_hour;
-
                   DateTime weekIntoSecond;
                   if (formKey.currentState!.validate()) {
                     // print(addTaskController.reminderTitleController.text);
@@ -124,9 +119,9 @@ class add_Remainders extends StatelessWidget {
                           00,
                           updatedDate.millisecond,
                           updatedDate.microsecond);
-
                       print(updatedDate);
                     }
+
                     if (addTaskController.reminderType.value == 'Minute') {
                       custom_minute =
                           int.parse(addTaskController.frequencyController.text);
@@ -137,21 +132,22 @@ class add_Remainders extends StatelessWidget {
                       updatedDate =
                           now.add(Duration(seconds: minuteIntoSecond));
                       print(updatedDate);
-                      taskobj.customDay =
-                          int.parse(addTaskController.frequencyController.text);
+                      taskobj.customMinute = minuteIntoSecond;
                     }
 
                     if (addTaskController.reminderType.value == 'Hourly') {
                       custom_hour =
                           int.parse(addTaskController.frequencyController.text);
-
                       int hourIntoSecond =
                           Duration(hours: custom_hour).inSeconds;
+                      print(hourIntoSecond);
                       print(now);
                       print('----------------Hourly-----------------');
                       updatedDate = now.add(Duration(seconds: hourIntoSecond));
                       print(updatedDate);
+                      taskobj.customHour = hourIntoSecond;
                     }
+
                     taskobj.taskTitle =
                         addTaskController.reminderTitleController.text;
                     taskobj.categoryName =
@@ -162,17 +158,18 @@ class add_Remainders extends StatelessWidget {
                     taskobj.isRepeat = 1;
                     taskobj.reminderType =
                         addTaskController.reminderType.toString();
+
                     if (taskobj.taskId == null) {
                       taskController.addNewTask(taskobj);
                     } else {
                       taskController.editTask(taskobj);
                     }
 
-                    var Tid = await taskController.getLastInsertedId();
-
+                    var lastInsertedId =
+                        await taskController.getLastInsertedId();
                     final difference = updatedDate.difference(now).inSeconds;
                     taskController.showNotification(
-                        Tid[0]['task_id'],
+                        lastInsertedId[0]['task_id'],
                         difference,
                         addTaskController.reminderTitleController.text,
                         'Reminder');
@@ -193,14 +190,6 @@ class add_Remainders extends StatelessWidget {
           ],
         ),
         body: SingleChildScrollView(child: remainder_body(context)),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {},
-        //   backgroundColor: green,
-        //   child: Icon(
-        //     Icons.check,
-        //     color: white,
-        //   ),
-        // ),
       ),
     );
   }

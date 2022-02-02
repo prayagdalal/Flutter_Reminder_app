@@ -20,13 +20,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String date = DateFormat.jm().format(DateTime.now());
-    print(date);
-    SharedPrefrences.getSession('default_time').then((value) {
-      if (value.isEmpty || value == '') {
-        taskController.setSession('10:00 PM');
-      }
-    });
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
       appBar: AppBar(
@@ -49,7 +42,7 @@ class Home extends StatelessWidget {
               color: white,
             ),
             onPressed: () {
-              //  DBProvider.db.deleteTbl();
+              //DBProvider.db.deleteTbl();
               //Get.to(() => SearchBarPage());
               // var dayOfWeek = 5;
               // DateTime date = DateTime.now();

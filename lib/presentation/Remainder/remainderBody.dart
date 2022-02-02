@@ -284,7 +284,7 @@ InputDecoration getTextBorder() {
 }
 
 Widget _renderWidget(ctx) {
-  if (addTaskController.reminderType.value == "Daiiiply")
+  if (addTaskController.reminderType.value == "Daily")
     return frequency_input("Day");
   else if (addTaskController.reminderType.value == "Minute")
     return frequency_input("Minute");

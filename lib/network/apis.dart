@@ -29,7 +29,7 @@ class DBProvider {
 
   onCreate(Database db) async {
     await db.execute(
-        'CREATE TABLE IF NOT EXISTS taskTbl (task_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,task_title TEXT,description TEXT,category_name TEXT,reminderType TEXT,isRepeat INTEGER DEFAULT 0,isSnoozed INTEGER DEFAULT 0,isActive INTEGER DEFAULT 0,isComplete INTEGER DEFAULT 0,frequency INTEGER,selected_days TEXT,custom_week INTEGER,custom_day INTEGER,custom_month int,time DATETIME,snooze_time INTEGER,updated_time DATETIME,isVibrated INTEGER DEFAULT 0)');
+        'CREATE TABLE IF NOT EXISTS taskTbl (task_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,task_title TEXT,description TEXT,category_name TEXT,reminderType TEXT,isRepeat INTEGER DEFAULT 0,isSnoozed INTEGER DEFAULT 0,isActive INTEGER DEFAULT 0,isComplete INTEGER DEFAULT 0,frequency INTEGER,selected_days TEXT,custom_week INTEGER,custom_day INTEGER,custom_month int,custom_minute int,custom_hour int,time DATETIME,snooze_time INTEGER,updated_time DATETIME,isVibrated INTEGER DEFAULT 0)');
   }
 
   Future<List<TaskModel>> getTaskList() async {
@@ -88,7 +88,7 @@ class DBProvider {
     return res;
   }
 
-   Future<List<TaskModel>> getTaskByCat(String catNm) async {
+  Future<List<TaskModel>> getTaskByCat(String catNm) async {
     final db = await database;
     var res = await db
         .query("taskTbl", where: "category_name = ?", whereArgs: [catNm]);

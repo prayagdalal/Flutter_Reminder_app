@@ -23,11 +23,15 @@ class SettingController extends GetxController {
 
   @override
   void onInit() {
-    SharedPrefrences.getSession('default_time').then((value) {
-      defaultTime.value = value;
-    });
+    getSessionValue();
     snoozeflag.value = false;
     //  GetStorage().write("defaulttime", "9:00 AM");
     super.onInit();
+  }
+
+  getSessionValue() {
+    SharedPrefrences.getSession('default_time').then((value) {
+      defaultTime.value = value;
+    });
   }
 }

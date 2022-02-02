@@ -3,6 +3,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:reminder_app/presentation/Home/home.dart';
+import 'package:reminder_app/utills/colors.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
@@ -44,9 +45,11 @@ class NotificationService {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
             'main_channel', 'Main Channel', 'Main channel notifications',
-            importance: Importance.max,
-            priority: Priority.max,
+            importance: Importance.defaultImportance,
+            priority: Priority.defaultPriority,
+            showProgress: true,
             enableVibration: true,
+            ledColor: green,
             icon: 'app_icon');
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
@@ -69,8 +72,6 @@ class NotificationService {
             'main_channel', 'Main Channel', 'Main channel notifications',
             importance: Importance.max,
             priority: Priority.max,
-            ongoing: true,
-            fullScreenIntent: false,
             enableVibration: true,
             icon: 'app_icon'),
         iOS: IOSNotificationDetails(

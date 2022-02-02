@@ -25,6 +25,8 @@ class TaskModel {
     this.customWeek,
     this.customDay,
     this.customMonth,
+    this.customMinute,
+    this.customHour,
     this.time,
     this.snoozeTime,
     this.updatedTime,
@@ -45,6 +47,8 @@ class TaskModel {
   int? customWeek;
   int? customDay;
   int? customMonth;
+  int? customMinute;
+  int? customHour;
   String? time;
   int? snoozeTime;
   String? updatedTime;
@@ -68,6 +72,9 @@ class TaskModel {
         customWeek: json["custom_week"] == null ? null : json["custom_week"],
         customDay: json["custom_day"] == null ? null : json["custom_day"],
         customMonth: json["custom_month"] == null ? null : json["custom_month"],
+        customMinute:
+            json["custom_minute"] == null ? null : json["custom_minute"],
+        customHour: json["custom_hour"] == null ? null : json["custom_hour"],
         time: json["time"] == null
             ? null
             : DateTime.parse(json["time"]).toString(),
@@ -93,6 +100,8 @@ class TaskModel {
         "custom_week": customWeek == null ? null : customWeek,
         "custom_day": customDay == null ? null : customDay,
         "custom_month": customMonth == null ? null : customMonth,
+        "custom_minute": customMinute == null ? null : customMinute,
+        "custom_hour": customHour == null ? null : customHour,
         "time": time == null ? null : time,
         "snooze_time": snoozeTime == null ? null : snoozeTime,
         "updated_time": updatedTime == null ? null : updatedTime,

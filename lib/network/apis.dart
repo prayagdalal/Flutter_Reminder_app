@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reminder_app/model/taskModel.dart';
@@ -47,11 +49,8 @@ class DBProvider {
     name = "";
     final db = await database;
     var res = await db.query("taskTbl");
-    List<TaskModel> list =
-        res.isNotEmpty ? res.map((c) => TaskModel.fromJson(c)).toList() : [];
-    for (int i = 0; i < list.length; i++) {
-      name = name + list[i].toJson().toString() + ',';
-    }
+     name = json.encode(res);
+    return name;
   }
 
   deleteTbl() async {

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:get/get.dart';
 
 import 'dart:async';
@@ -6,15 +9,9 @@ import 'dart:io';
 
 // import 'package:backup_restore/show_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart' as p;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:reminder_app/controller/task_controller.dart';
@@ -45,15 +42,135 @@ class backupRestoreController extends GetxController {
   }
 
   downloadandsavefile() async {
-    progressdialog.value = true;
-    try {
+    if (await ConnectivityWrapper.instance.isConnected) {
+      progressdialog.value = true;
+      try {
+        final driveApi = await _getDriveApi();
+        if (driveApi == null) {
+          return;
+        }
+        Get.defaultDialog(
+            title: "",
+            backgroundColor: Color(0x01000000),
+            barrierDismissible: true,
+            content: Obx(() => Container(
+                  color: Color(0x01000000),
+                  child: progressdialog.value
+                      ? SizedBox(
+                          height: 50,
+                          child: SpinKitFoldingCube(
+                            itemBuilder: (BuildContext context, int index) {
+                              return DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: index.isEven
+                                      ? Colors.grey[350]
+                                      : Colors.green,
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : AlertDialog(
+                          content: Row(
+                            children: [
+                              Icon(
+                                Icons.download_rounded,
+                                color: Colors.green,
+                              ),
+                              SizedBox(
+                                width: 7,
+                              ),
+                              Text("Restore Successfull"),
+                            ],
+                          ),
+                        ),
+                )));
+        final folder_id = await _getFolderId(driveApi);
+        final fileList = await driveApi.files.list(
+          spaces: 'drive',
+          q: "'$folder_id' in parents",
+          $fields: 'files(id, name,size)',
+        );
+
+        final dirlist = await _getexternalstoragepath();
+        final path = dirlist.path;
+        final file = File('$path/backup_restore.txt');
+
+        var res = await driveApi.files.get(fileList.files![0].id.toString(),
+            downloadOptions: drive.DownloadOptions.fullMedia);
+        drive.Media? mediaStream = res as drive.Media?;
+
+        List<int> dataStore = [];
+        mediaStream!.stream.listen((data) {
+          print("DataReceived: ${data.length}");
+          dataStore.addAll(data);
+        }, onDone: () async {
+          Directory tempDir = await p.getApplicationSupportDirectory();
+          String tempPath = tempDir.path;
+
+          File file = File('$tempPath/test');
+          await file.writeAsBytes(dataStore);
+          String content = file.readAsStringSync();
+          List taskModelRawList = json.decode(content);
+          if (taskModelRawList.isNotEmpty) {
+            taskModelRawList.forEach((taskModelRawElement) {
+              TaskModel taskModelObj = TaskModel.fromJson(taskModelRawElement);
+              DBProvider.db.addTask(taskModelObj);
+              DBProvider.db.getTaskList();
+            });
+          }
+          progressdialog.value = false;
+          Timer(Duration(seconds: 4), () {
+            Get.back();
+          });
+        }, onError: (error) {
+          AlertDialog(
+            title: Text("Error"),
+          );
+        });
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      Get.defaultDialog(
+          backgroundColor: Colors.transparent,
+          title: "",
+          barrierDismissible: true,
+          content: AlertDialog(
+            insetPadding: EdgeInsets.zero,
+            scrollable: true,
+            content: Row(
+              children: [
+                Icon(
+                  Icons.wifi_off_outlined,
+                  color: Colors.green,
+                ),
+                SizedBox(
+                  width: 7,
+                ),
+                Text("No Internet Connectivity"),
+              ],
+            ),
+          ));
+    }
+  }
+
+  uploadToGoogleDrive() async {
+    if (await ConnectivityWrapper.instance.isConnected) {
+      TaskModel model = TaskModel();
+      model.taskTitle = "Mobile Recharge";
+      controllers.addNewTask(model);
+      DBProvider.db.getdatabaselist();
+
+      progressdialog.value = true;
+
       final driveApi = await _getDriveApi();
       if (driveApi == null) {
         return;
       }
       Get.defaultDialog(
+          backgroundColor: Colors.transparent,
           title: "",
-          backgroundColor: Color(0x01000000),
           barrierDismissible: true,
           content: Obx(() => Container(
                 color: Color(0x01000000),
@@ -73,159 +190,89 @@ class backupRestoreController extends GetxController {
                         ),
                       )
                     : AlertDialog(
+                        scrollable: true,
                         content: Row(
                           children: [
                             Icon(
-                              Icons.download_rounded,
+                              Icons.backup,
                               color: Colors.green,
                             ),
                             SizedBox(
                               width: 7,
                             ),
-                            Text("Restore Successfull"),
+                            Text("Backup successfull"),
                           ],
                         ),
                       ),
               )));
+
       final folder_id = await _getFolderId(driveApi);
       final fileList = await driveApi.files.list(
         spaces: 'drive',
         q: "'$folder_id' in parents",
         $fields: 'files(id, name,size)',
       );
+      try {
+        driveApi.files.delete(fileList.files![0].id.toString());
+      } catch (e) {
+        AlertDialog(
+          title: Text("error"),
+        );
+      }
 
-      final dirlist = await _getexternalstoragepath();
-      final path = dirlist.path;
-      final file = File('$path/backup_restore.txt');
+      try {
+        final driveApi = await _getDriveApi();
+        if (driveApi == null) {
+          return;
+        }
 
-      var res = await driveApi.files.get(fileList.files![0].id.toString(),
-          downloadOptions: drive.DownloadOptions.fullMedia);
-      drive.Media? mediaStream = res as drive.Media?;
+        final folderId = await _getFolderId(driveApi);
+        if (folderId == null) {
+          await Get.defaultDialog(
+              content: CustomText(text: "Error, couldn\'t sign in"));
+          return;
+        }
+        String contents = name;
+        print(contents);
+        final Stream<List<int>> mediaStream =
+            Future.value(contents.codeUnits).asStream().asBroadcastStream();
 
-      List<int> dataStore = [];
-      mediaStream!.stream.listen((data) {
-        print("DataReceived: ${data.length}");
-        dataStore.addAll(data);
-      }, onDone: () async {
-        Directory tempDir = await p.getApplicationSupportDirectory();
-        String tempPath = tempDir.path;
+        var media = drive.Media(mediaStream, contents.length);
+        var driveFile = drive.File();
+        driveFile.name = "backup_restore.txt";
+        driveFile.modifiedTime = DateTime.now().toUtc();
+        driveFile.parents = [folderId];
 
-        File file = File('$tempPath/test');
-        await file.writeAsBytes(dataStore);
-        String content = file.readAsStringSync();
+        // Upload
+        final response =
+            await driveApi.files.create(driveFile, uploadMedia: media);
         progressdialog.value = false;
         Timer(Duration(seconds: 4), () {
           Get.back();
         });
-
-        log(content);
-
-        print(dataStore);
-      }, onError: (error) {
-        AlertDialog(
-          title: Text("Error"),
-        );
-      });
-    } catch (e) {
-      print(e);
+      } catch (e) {}
+    } else {
+      Get.defaultDialog(
+          backgroundColor: Colors.transparent,
+          title: "",
+          barrierDismissible: true,
+          content: AlertDialog(
+            insetPadding: EdgeInsets.zero,
+            scrollable: true,
+            content: Row(
+              children: [
+                Icon(
+                  Icons.wifi_off_outlined,
+                  color: Colors.green,
+                ),
+                SizedBox(
+                  width: 7,
+                ),
+                Text("No Internet Connectivity"),
+              ],
+            ),
+          ));
     }
-  }
-
-  uploadToGoogleDrive() async {
-    TaskModel model = TaskModel();
-    model.taskTitle = "Mobile Recharge";
-    controllers.addNewTask(model);
-    DBProvider.db.getdatabaselist();
-
-    progressdialog.value = true;
-
-    final driveApi = await _getDriveApi();
-    if (driveApi == null) {
-      return;
-    }
-    Get.defaultDialog(
-        backgroundColor: Colors.transparent,
-        title: "",
-        barrierDismissible: true,
-        content: Obx(() => Container(
-              color: Color(0x01000000),
-              child: progressdialog.value
-                  ? SizedBox(
-                      height: 50,
-                      child: SpinKitFoldingCube(
-                        itemBuilder: (BuildContext context, int index) {
-                          return DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: index.isEven
-                                  ? Colors.grey[350]
-                                  : Colors.green,
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  : AlertDialog(
-                      scrollable: true,
-                      content: Row(
-                        children: [
-                          Icon(
-                            Icons.backup,
-                            color: Colors.green,
-                          ),
-                          SizedBox(
-                            width: 7,
-                          ),
-                          Text("Backup successfull"),
-                        ],
-                      ),
-                    ),
-            )));
-
-    final folder_id = await _getFolderId(driveApi);
-    final fileList = await driveApi.files.list(
-      spaces: 'drive',
-      q: "'$folder_id' in parents",
-      $fields: 'files(id, name,size)',
-    );
-    try {
-      driveApi.files.delete(fileList.files![0].id.toString());
-    } catch (e) {
-      AlertDialog(
-        title: Text("error"),
-      );
-    }
-
-    try {
-      final driveApi = await _getDriveApi();
-      if (driveApi == null) {
-        return;
-      }
-
-      final folderId = await _getFolderId(driveApi);
-      if (folderId == null) {
-        await Get.defaultDialog(
-            content: CustomText(text: "Error, couldn\'t sign in"));
-        return;
-      }
-      String contents = name;
-      print(contents);
-      final Stream<List<int>> mediaStream =
-          Future.value(contents.codeUnits).asStream().asBroadcastStream();
-
-      var media = drive.Media(mediaStream, contents.length);
-      var driveFile = drive.File();
-      driveFile.name = "backup_restore.txt";
-      driveFile.modifiedTime = DateTime.now().toUtc();
-      driveFile.parents = [folderId];
-
-      // Upload
-      final response =
-          await driveApi.files.create(driveFile, uploadMedia: media);
-      progressdialog.value = false;
-      Timer(Duration(seconds: 4), () {
-        Get.back();
-      });
-    } catch (e) {}
   }
 
   Future<drive.DriveApi?> _getDriveApi() async {

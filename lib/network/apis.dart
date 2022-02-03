@@ -49,7 +49,7 @@ class DBProvider {
     name = "";
     final db = await database;
     var res = await db.query("taskTbl");
-     name = json.encode(res);
+    name = json.encode(res);
     return name;
   }
 

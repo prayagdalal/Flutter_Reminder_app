@@ -116,7 +116,7 @@ class backupRestoreController extends GetxController {
             taskModelRawList.forEach((taskModelRawElement) {
               TaskModel taskModelObj = TaskModel.fromJson(taskModelRawElement);
               DBProvider.db.addTask(taskModelObj);
-              DBProvider.db.getTaskList();
+              // DBProvider.db.getTaskList();
             });
           }
           progressdialog.value = false;

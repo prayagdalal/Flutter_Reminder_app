@@ -8,9 +8,10 @@ import 'package:reminder_app/controller/task_controller.dart';
 import 'package:reminder_app/model/taskModel.dart';
 import 'package:reminder_app/network/session.dart';
 import 'package:reminder_app/presentation/Home/bottomNav.dart';
+import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/notification_service.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-
+import 'package:splash_screen_view/SplashScreenView.dart';
 import 'controller/life_cycle_controller.dart';
 
 final taskController = Get.put(TaskController());
@@ -61,7 +62,20 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: colorCustom,
       ),
-      home: LandingPage(),
+      home: SplashScreenView(
+        navigateRoute: LandingPage(),
+        duration: 2500,
+        imageSize: 130,
+        imageSrc: "assets/splash.png",
+        text: "Reminder",
+        textType: TextType.NormalText,
+        textStyle: TextStyle(
+          fontSize: 25.0,
+          letterSpacing: 1.0,
+          color: green,
+        ),
+        backgroundColor: white,
+      ),
     );
   }
 }

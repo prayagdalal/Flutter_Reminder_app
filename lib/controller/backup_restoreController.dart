@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart' as p;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:reminder_app/controller/task_controller.dart';
+import 'package:reminder_app/main.dart';
 import 'package:reminder_app/model/taskModel.dart';
 import 'package:reminder_app/network/apis.dart';
 import 'package:reminder_app/network/globalFile.dart';
@@ -44,47 +45,48 @@ class backupRestoreController extends GetxController {
   downloadandsavefile() async {
     if (await ConnectivityWrapper.instance.isConnected) {
       progressdialog.value = true;
+      Get.defaultDialog(
+          title: "",
+          backgroundColor: Color(0x01000000),
+          barrierDismissible: true,
+          content: Obx(() => Container(
+                color: Color(0x01000000),
+                child: progressdialog.value
+                    ? SizedBox(
+                        height: 50,
+                        child: SpinKitFoldingCube(
+                          itemBuilder: (BuildContext context, int index) {
+                            return DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: index.isEven
+                                    ? Colors.grey[350]
+                                    : Colors.green,
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : AlertDialog(
+                        content: Row(
+                          children: [
+                            Icon(
+                              Icons.download_rounded,
+                              color: Colors.green,
+                            ),
+                            SizedBox(
+                              width: 7,
+                            ),
+                            Text("Restore Successfull"),
+                          ],
+                        ),
+                      ),
+              )));
       try {
         final driveApi = await _getDriveApi();
         if (driveApi == null) {
           return;
         }
-        Get.defaultDialog(
-            title: "",
-            backgroundColor: Color(0x01000000),
-            barrierDismissible: true,
-            content: Obx(() => Container(
-                  color: Color(0x01000000),
-                  child: progressdialog.value
-                      ? SizedBox(
-                          height: 50,
-                          child: SpinKitFoldingCube(
-                            itemBuilder: (BuildContext context, int index) {
-                              return DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: index.isEven
-                                      ? Colors.grey[350]
-                                      : Colors.green,
-                                ),
-                              );
-                            },
-                          ),
-                        )
-                      : AlertDialog(
-                          content: Row(
-                            children: [
-                              Icon(
-                                Icons.download_rounded,
-                                color: Colors.green,
-                              ),
-                              SizedBox(
-                                width: 7,
-                              ),
-                              Text("Restore Successfull"),
-                            ],
-                          ),
-                        ),
-                )));
+
         final folder_id = await _getFolderId(driveApi);
         final fileList = await driveApi.files.list(
           spaces: 'drive',
@@ -120,6 +122,7 @@ class backupRestoreController extends GetxController {
             });
           }
           progressdialog.value = false;
+          taskController.fetchTasks();
           Timer(Duration(seconds: 4), () {
             Get.back();
           });
@@ -157,17 +160,6 @@ class backupRestoreController extends GetxController {
 
   uploadToGoogleDrive() async {
     if (await ConnectivityWrapper.instance.isConnected) {
-      TaskModel model = TaskModel();
-      model.taskTitle = "Mobile Recharge";
-      controllers.addNewTask(model);
-      DBProvider.db.getdatabaselist();
-
-      progressdialog.value = true;
-
-      final driveApi = await _getDriveApi();
-      if (driveApi == null) {
-        return;
-      }
       Get.defaultDialog(
           backgroundColor: Colors.transparent,
           title: "",
@@ -205,6 +197,18 @@ class backupRestoreController extends GetxController {
                         ),
                       ),
               )));
+
+      TaskModel model = TaskModel();
+      model.taskTitle = "Mobile Recharge";
+      controllers.addNewTask(model);
+      DBProvider.db.getdatabaselist();
+
+      progressdialog.value = true;
+
+      final driveApi = await _getDriveApi();
+      if (driveApi == null) {
+        return;
+      }
 
       final folder_id = await _getFolderId(driveApi);
       final fileList = await driveApi.files.list(

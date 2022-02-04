@@ -18,6 +18,7 @@ class SettingController extends GetxController {
 
   TimeOfDay stringToTimeOfDay(String tod) {
     final format = DateFormat.jm(); //"6:00 AM"
+    
     return TimeOfDay.fromDateTime(format.parse(tod));
   }
 

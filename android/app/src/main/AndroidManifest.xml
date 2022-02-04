@@ -1,9 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.reminder_app">
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+	<!-- For apps with targetSDK=31 (Android 12) -->
+	<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
    <application
         android:label="reminder_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+	<receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+	<intent-filter>
+	<action android:name="android.intent.action.BOOT_COMPLETED"></action>
+	</intent-filter>
+	</receiver>
         <activity
             android:name=".MainActivity"
             android:exported="true"

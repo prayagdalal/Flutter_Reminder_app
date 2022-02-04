@@ -97,29 +97,31 @@ class add_Remainders extends StatelessWidget {
                       print('-------------Weekly--------------------');
                       updatedDate = now.add(Duration(seconds: weekIntoSecond));
                       print(updatedDate);
-                      String defaultTime = '';
-                      TimeOfDay defaultTimeFinal =
-                          TimeOfDay(hour: 15, minute: 0);
                       SharedPrefrences.getSession('default_time').then((value) {
                         print('insesssion');
-                        defaultTime = value;
-                        defaultTimeFinal =
-                            settingController.stringToTimeOfDay(defaultTime);
+                        print(value);
+                        var finaldefaultTime = DateFormat.jm().parse(value);
+                        var newHour = finaldefaultTime.hour;
+                        var newMinute = finaldefaultTime.minute;
+                        // ignore: unnecessary_new
+                        updatedDate = new DateTime(
+                            updatedDate.year,
+                            updatedDate.month,
+                            updatedDate.day,
+                            newHour,
+                            newMinute,
+                            00,
+                            updatedDate.millisecond,
+                            updatedDate.microsecond);
+
+                        print(updatedDate);
+
+                        print(weekIntoSecond);
+                        print('-------++--------------');
+                        weekIntoSecond = updatedDate.difference(now).inSeconds;
+                        print(weekIntoSecond);
+                        taskobj.customWeek = weekIntoSecond;
                       });
-                      var newHour = defaultTimeFinal.hour;
-                      var newMinute = defaultTimeFinal.minute;
-                      updatedDate = updatedDate.toLocal();
-                      // ignore: unnecessary_new
-                      updatedDate = new DateTime(
-                          updatedDate.year,
-                          updatedDate.month,
-                          updatedDate.day,
-                          newHour,
-                          newMinute,
-                          00,
-                          updatedDate.millisecond,
-                          updatedDate.microsecond);
-                      print(updatedDate);
                     }
 
                     if (addTaskController.reminderType.value == 'Minute') {
@@ -147,7 +149,6 @@ class add_Remainders extends StatelessWidget {
                       print(updatedDate);
                       taskobj.customHour = hourIntoSecond;
                     }
-
                     taskobj.taskTitle =
                         addTaskController.reminderTitleController.text;
                     taskobj.categoryName =
@@ -158,13 +159,11 @@ class add_Remainders extends StatelessWidget {
                     taskobj.isRepeat = 1;
                     taskobj.reminderType =
                         addTaskController.reminderType.toString();
-
                     if (taskobj.taskId == null) {
                       taskController.addNewTask(taskobj);
                     } else {
                       taskController.editTask(taskobj);
                     }
-
                     var lastInsertedId =
                         await taskController.getLastInsertedId();
                     final difference = updatedDate.difference(now).inSeconds;
@@ -178,11 +177,11 @@ class add_Remainders extends StatelessWidget {
                             updatedDate.toString() +
                             '----------AFTER SECONDS:-----------' +
                             difference.toString());
-
                     taskController.fetchTasks();
                     addTaskController.reminderTitleController.clear();
                     addTaskController.reminderNoteController.clear();
-                    Get.back();
+                    // Get.back();
+
                   }
                 },
               ),

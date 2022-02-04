@@ -16,13 +16,19 @@ class TaskController extends GetxController {
   late Timer timer;
   List taskId = [];
   late String catName = ''.obs();
+  var searchValue = ''.obs;
 
   @override
   void onInit() {
     tasks.value = [];
+    searchData.value = [];
     fetchTasks();
     tz.initializeTimeZones();
     super.onInit();
+  }
+
+  setSearchValue(value) {
+    searchValue.value = value;
   }
 
   fetchTasks() async {
@@ -69,14 +75,18 @@ class TaskController extends GetxController {
     SharedPrefrences.setSession('default_time', defaultTime);
   }
 
-  fetchSearchTasks(catName) async {
+  fetchSearchTasks({catName}) async {
     print("Fetch search");
     print(catName);
-    // DateTime currentDate = new DateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-    //     .parse(DateTime.now().toString());
-    DBProvider.db.getTaskByCat(catName).then((taskList) {
-      searchData.value = taskList;
-      print(searchData);
-    });
+    if (catName == null || catName == "") {
+      DBProvider.db.getTaskList().then((value) {
+        searchData.value = value;
+      });
+    } else {
+      DBProvider.db.getTaskByCat(catName).then((taskList) {
+        searchData.value = taskList;
+        print(searchData);
+      });
+    }
   }
 }

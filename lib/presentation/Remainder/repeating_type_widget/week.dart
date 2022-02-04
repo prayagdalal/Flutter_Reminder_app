@@ -30,7 +30,7 @@ Widget week_type() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-     frequency_input("Week"),
+      frequency_input("Week"),
       Padding(
         padding: const EdgeInsets.only(left: 22.0),
         child: CustomText(

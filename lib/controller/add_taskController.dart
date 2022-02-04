@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../main.dart';
+
 class AddTaskController extends GetxController {
   var tabIndex = 0.obs;
   var category = 'Warrnty Card'.obs;
@@ -32,6 +34,16 @@ class AddTaskController extends GetxController {
 
   void setReminderType(String value) {
     reminderType.value = value;
+  }
+
+  void clearAllValues() {
+    addTaskController.reminderTitleController.clear();
+    addTaskController.reminderNoteController.clear();
+    addTaskController.frequencyController.clear();
+    settingController.repeatflag.value = true;
+    settingController.snoozeflag.value = false;
+    addTaskController.reminderType.refresh();
+    settingController.taskTIme.value = ''.toString();
   }
 
   @override

@@ -1,20 +1,20 @@
 // ignore_for_file: prefer_const_constructors, unrelated_type_equality_checks, prefer_is_empty, avoid_print, prefer_const_declarations
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:reminder_app/controller/task_controller.dart';
-import 'package:reminder_app/model/taskModel.dart';
 import 'package:reminder_app/network/session.dart';
 import 'package:reminder_app/presentation/Home/bottomNav.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/notification_service.dart';
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
+import 'controller/add_taskController.dart';
 import 'controller/life_cycle_controller.dart';
+import 'controller/setting_controller.dart';
 
 final taskController = Get.put(TaskController());
+final addTaskController = Get.put(AddTaskController());
+final settingController = Get.put(SettingController());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,7 +64,8 @@ class _MyAppState extends State<MyApp> {
       ),
       home: SplashScreenView(
         navigateRoute: LandingPage(),
-        duration: 2500,
+        duration: 2000,
+        speed: 50,
         imageSize: 130,
         imageSrc: "assets/splash.png",
         text: "Reminder",

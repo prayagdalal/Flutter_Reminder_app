@@ -48,9 +48,10 @@ Widget settinglists(ctx) {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           color: white,
-          child: ListTile(
+          child:
+           ListTile(
               onTap: () {
-                _selectTime(ctx);
+                selectTime(ctx);
                 // showTimePicker(context: ctx, initialTime: TimeOfDay.now());
               },
               leading: Icon(Icons.av_timer),
@@ -204,7 +205,7 @@ Widget customerow(icn, txt1, txt2) {
 }
 
 TimeOfDay selectetime = TimeOfDay.now();
-_selectTime(BuildContext ctx) async {
+selectTime(BuildContext ctx) async {
   final TimeOfDay? picked = await showTimePicker(
       context: ctx,
       initialTime: settingController

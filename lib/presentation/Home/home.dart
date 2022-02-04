@@ -44,14 +44,7 @@ class Home extends StatelessWidget {
             onPressed: () {
               //DBProvider.db.deleteTbl();
               //Get.to(() => SearchBarPage());
-              // var dayOfWeek = 5;
-              // DateTime date = DateTime.now();
-              // var lastMonday = date
-              //     .subtract(Duration(days: 21 + dayOfWeek))
-              //     .toIso8601String();
-              // print(dayOfWeek);
-              // print('----------------------------');
-              // print(lastMonday);
+
               var newHour = 5;
               var time = DateTime.now();
               print(time);
@@ -76,9 +69,7 @@ class Home extends StatelessWidget {
                 color: white,
               ),
               onPressed: () {
-                // taskController.addNewTask();
-                // taskController.fetchTasks();
-                // Get.to(add_Remainders());
+                addTaskController.clearAllValues();
                 TaskModel addTaskObj = TaskModel();
                 Get.to(() => add_Remainders(), arguments: {
                   "testArg": addTaskObj,

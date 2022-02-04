@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:reminder_app/presentation/Remainder/remainderBody.dart';
 import 'package:reminder_app/utills/colors.dart';
 
+import '../../../main.dart';
+
 Widget custom_type(ctx) {
   return Column(
     children: [

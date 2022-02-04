@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:reminder_app/controller/add_taskController.dart';
 import 'package:reminder_app/controller/setting_controller.dart';
+import 'package:reminder_app/model/taskModel.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/custom.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/every_widget.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/month.dart';
@@ -12,6 +14,9 @@ import 'package:reminder_app/presentation/Remainder/repeating_type_widget/week.d
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/year.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
+
+import '../../main.dart';
+import 'repeating_type_widget/daily.dart';
 
 List<dynamic> category = [
   {"name": "Warrnty Card", "isSelected": false},
@@ -44,9 +49,9 @@ var remindertype1 = [
   "Hourly",
   "Daily",
   "Weekly",
-  "Monthly",
-  "Yearly",
-  "Custom"
+  // "Monthly",
+  // "Yearly",
+  // "Custom"
 ];
 List<dynamic> remindertype = [
   {"name": "Minute", "isSelected": false},
@@ -57,10 +62,8 @@ List<dynamic> remindertype = [
   {"name": "Yearly", "isSelected": false},
   {"name": "Custom", "isSelected": false},
 ];
-var addTaskController = Get.put(AddTaskController());
-var settingController = Get.put(SettingController());
 
-Widget remainder_body(ctx) {
+Widget remainder_body(ctx, TaskModel taskobj) {
   // AddTaskController addTaskController = AddTaskController();
   var parsedDate = DateTime.parse(addTaskController.currentTime.value);
   String formattedDate = DateFormat('EE, dd MMM, h:mm a').format(parsedDate);
@@ -204,7 +207,7 @@ Widget remainder_body(ctx) {
                         )),
                       ),
                     ),
-                    Obx(() => _renderWidget(ctx)),
+                    Obx(() => _renderWidget(ctx, taskobj)),
                     SizedBox(
                       height: 8,
                     ),
@@ -230,6 +233,24 @@ Widget remainder_body(ctx) {
                         contentPadding: EdgeInsets.zero,
                         //leading: Icon(Icons.snooze_outlined),
                         title: CustomText(
+                          text: "Repeat My Reminder",
+                          weight: FontWeight.w500,
+                        ),
+                        dense: true,
+                        trailing: Obx(() => Switch(
+                            value: settingController.repeatflag.value,
+                            onChanged: (val) {
+                              settingController.repeatChange();
+                              print(settingController.repeatflag);
+                            }))),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    ListTile(
+                        onTap: null,
+                        contentPadding: EdgeInsets.zero,
+                        //leading: Icon(Icons.snooze_outlined),
+                        title: CustomText(
                           text: "Snooze",
                           weight: FontWeight.w500,
                         ),
@@ -243,7 +264,9 @@ Widget remainder_body(ctx) {
                     Visibility(
                       visible: true,
                       child: Column(
-                        children: [
+                        children:
+                            // ignore: prefer_const_literals_to_create_immutables
+                            [
                           // addRadioButton(0, '1 Minutes', '1 Minutes'),
                           // addRadioButton(1, '5 Minutes', '5 Minutes'),
                         ],
@@ -283,9 +306,9 @@ InputDecoration getTextBorder() {
   );
 }
 
-Widget _renderWidget(ctx) {
+Widget _renderWidget(ctx, TaskModel taskobj) {
   if (addTaskController.reminderType.value == "Daily")
-    return frequency_input("Day");
+    return daily_type(ctx, taskobj);
   else if (addTaskController.reminderType.value == "Minute")
     return frequency_input("Minute");
   else if (addTaskController.reminderType.value == "Hourly")

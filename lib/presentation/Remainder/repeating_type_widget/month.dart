@@ -8,6 +8,8 @@ import 'package:reminder_app/presentation/Remainder/repeating_type_widget/every_
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
 
+import '../../../main.dart';
+
 Widget month_type(ctx) {
   return Column(
     // crossAxisAlignment: CrossAxisAlignment.center,
@@ -22,7 +24,7 @@ Widget month_type(ctx) {
           Container(
             width: 130,
             child: InkWell(
-              onTap: ()  {
+              onTap: () {
                 _selectDate(ctx);
               },
               child: IgnorePointer(

@@ -81,6 +81,9 @@ Widget frequency_input(txt) {
                 }
               },
               //  ============== my code ende here
+              validator: (value) {
+                return "Enter Value";
+              },
               maxLength: 2,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(

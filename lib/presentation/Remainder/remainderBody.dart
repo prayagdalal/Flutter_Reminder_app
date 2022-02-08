@@ -146,7 +146,7 @@ Widget remainder_body(ctx, TaskModel taskobj) {
                       // The validator receives the text that the user has entered.
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please Enter Reminder Title';
+                          return 'Enter Reminder Title';
                         }
                         return null;
                       },

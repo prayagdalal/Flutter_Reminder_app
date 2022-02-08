@@ -31,28 +31,28 @@ Widget week_type() {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       frequency_input("Week"),
-      Padding(
-        padding: const EdgeInsets.only(left: 22.0),
-        child: CustomText(
-          text: "Repeat on",
-        ),
-      ),
-      SizedBox(
-        height: 6,
-      ),
-      SelectWeekDays(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        days: _days,
-        border: false,
-        boxDecoration: BoxDecoration(
-          color: green,
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        onSelect: (values) {
-          print(values);
-        },
-      ),
+      // Padding(
+      //   padding: const EdgeInsets.only(left: 22.0),
+      //   child: CustomText(
+      //     text: "Repeat on",
+      //   ),
+      // ),
+      // SizedBox(
+      //   height: 6,
+      // ),
+      // SelectWeekDays(
+      //   fontSize: 14,
+      //   fontWeight: FontWeight.w500,
+      //   days: _days,
+      //   border: false,
+      //   boxDecoration: BoxDecoration(
+      //     color: green,
+      //     borderRadius: BorderRadius.circular(30.0),
+      //   ),
+      //   onSelect: (values) {
+      //     print(values);
+      //   },
+      // ),
     ],
   );
 }

@@ -51,6 +51,8 @@ void callInLoop() async {
         taskobj.categoryName = taskController.tasks[i].categoryName;
         taskobj.isActive = 1;
         taskobj.isRepeat = 1;
+        taskobj.description = taskController.tasks[i].description;
+
         taskobj.customMinute = taskController.tasks[i].customMinute;
         taskobj.reminderType = taskController.tasks[i].reminderType;
         String newpdatedTime = stringToDateTime
@@ -83,6 +85,8 @@ void callInLoop() async {
         taskobj.categoryName = taskController.tasks[i].categoryName;
         taskobj.isActive = 1;
         taskobj.isRepeat = 1;
+        taskobj.description = taskController.tasks[i].description;
+
         taskobj.customHour = taskController.tasks[i].customHour;
         taskobj.reminderType = taskController.tasks[i].reminderType;
         String newpdatedTime = stringToDateTime
@@ -115,6 +119,8 @@ void callInLoop() async {
         taskobj.categoryName = taskController.tasks[i].categoryName;
         taskobj.isActive = 1;
         taskobj.isRepeat = 1;
+        taskobj.description = taskController.tasks[i].description;
+
         taskobj.customWeek = taskController.tasks[i].customWeek;
         taskobj.reminderType = taskController.tasks[i].reminderType;
         String newpdatedTime = stringToDateTime
@@ -147,6 +153,7 @@ void callInLoop() async {
         taskobj.categoryName = taskController.tasks[i].categoryName;
         taskobj.isActive = 1;
         taskobj.isRepeat = 1;
+        taskobj.description = taskController.tasks[i].description;
         taskobj.customDay = taskController.tasks[i].customDay;
         taskobj.reminderType = taskController.tasks[i].reminderType;
         String newpdatedTime = stringToDateTime

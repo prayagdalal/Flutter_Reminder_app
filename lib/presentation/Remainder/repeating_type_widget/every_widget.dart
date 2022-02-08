@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -77,12 +79,38 @@ Widget frequency_input(txt) {
                           ),
                         ));
                     addTaskController.frequencyController.text = "";
+                  } else if ((int.parse(val) == 0 || int.parse(val) > 4) &&
+                      txt == "Week") {
+                    Get.defaultDialog(
+                        backgroundColor: transparent,
+                        title: "",
+                        barrierDismissible: true,
+                        content: AlertDialog(
+                          insetPadding: EdgeInsets.zero,
+                          scrollable: true,
+                          content: Row(
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              Icon(
+                                Icons.warning_amber,
+                                color: green,
+                              ),
+                              SizedBox(
+                                width: 7,
+                              ),
+                              Text("Week should range \nbetween 1 to 4"),
+                            ],
+                          ),
+                        ));
+                    addTaskController.frequencyController.text = "";
                   }
                 }
               },
               //  ============== my code ende here
               validator: (value) {
-                return "Enter Value";
+                if (value == "") {
+                  return "Enter Value";
+                }
               },
               maxLength: 2,
               keyboardType: TextInputType.number,

@@ -1,14 +1,10 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:googleapis/docs/v1.dart';
 import 'package:intl/intl.dart';
 import 'package:reminder_app/model/taskModel.dart';
 import 'package:reminder_app/presentation/Remainder/addRemainder.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../main.dart';
 
@@ -22,197 +18,228 @@ Widget list(int flag) {
           itemCount: taskController.tasks.length,
           itemBuilder: (BuildContext context, int index) {
             return taskController.tasks[index].isActive == flag
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        side:
-                            BorderSide(color: (Colors.grey[350]!), width: 0.7),
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      elevation: 0,
-                      child: InkWell(
-                        onTap: () {
-                          // Get.to(() => add_Remainders(), arguments: {
-                          //   "testArg": taskController.tasks[index],
-                          // });
-                          if (taskController.tasks[index].description != "") {
-                            Get.defaultDialog(
-                              backgroundColor: Colors.transparent,
-                              title: "",
-                              barrierDismissible: true,
-                              content: AlertDialog(
-                                  insetPadding: EdgeInsets.zero,
-                                  scrollable: true,
-                                  content: Column(
-                                    children: [
-                                      CustomText(
-                                        text: taskController
-                                            .tasks[index].taskTitle
-                                            .toString(),
-                                        size: 20,
-                                        color: black,
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        taskController.tasks[index].description
-                                            .toString(),
-                                      ),
-                                    ],
+                ? GestureDetector(
+                    onTap: () {
+                      if (taskController.tasks[index].description != null &&
+                          taskController.tasks[index].description != "") {
+                        Get.defaultDialog(
+                          backgroundColor: Colors.transparent,
+                          barrierDismissible: true,
+                          title: "",
+                          content: AlertDialog(
+                              insetPadding: EdgeInsets.zero,
+                              elevation: 0,
+                              scrollable: true,
+                              content: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CustomText(
+                                    text: taskController.tasks[index].taskTitle
+                                        .toString(),
+                                    size: 18,
+                                    color: black,
+                                    weight: FontWeight.w600,
                                   ),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Get.back();
-                                      },
-                                      child: Text("OK"),
-                                    )
-                                  ]),
-                            );
-                          }
-                        },
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CustomText(
+                                    text: taskController
+                                        .tasks[index].description
+                                        .toString(),
+                                    size: 14,
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text("OK"),
+                                ),
+                              ]),
+                        );
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: (Colors.grey[350]!), width: 0.7),
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                        elevation: 0,
                         child: Padding(
                           padding: const EdgeInsets.only(
                               left: 12, right: 12, top: 12, bottom: 12),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              IntrinsicHeight(
-                                child: Row(
-                                  // ignore: prefer_const_literals_to_create_immutables
-                                  children: [
-                                    CustomText(
-                                      text: taskController
-                                          .tasks[index].taskTitle
-                                          .toString(),
-                                      color: black,
-                                      size: 18,
-                                    ),
-                                    Spacer(),
-                                    PopupMenuButton(
-                                      icon: Icon(Icons.more_vert),
-                                      color: white,
-                                      itemBuilder: (context) => [
-                                        PopupMenuItem<int>(
-                                          value: 0,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: [
-                                              Icon(Icons.check),
-                                              SizedBox(width: 5),
-                                              CustomText(
-                                                text: "Mark as Done",
+                              Row(
+                                children: [
+                                  CustomText(
+                                    text: taskController.tasks[index].taskTitle
+                                        .toString(),
+                                    color: black,
+                                    size: 19,
+                                    weight: FontWeight.w600,
+                                  ),
+                                  Spacer(),
+                                  flag == 1
+                                      ? PopupMenuButton(
+                                          icon: Icon(Icons.more_vert),
+                                          color: white,
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem<int>(
+                                              value: 0,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Icon(Icons.check),
+                                                  SizedBox(width: 5),
+                                                  CustomText(
+                                                    text: "Mark as Done",
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        PopupMenuItem<int>(
-                                          value: 1,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: [
-                                              Icon(Icons.edit),
-                                              SizedBox(width: 5),
-                                              CustomText(
-                                                text: "Edit",
+                                            ),
+                                            PopupMenuItem<int>(
+                                              value: 1,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Icon(Icons.edit),
+                                                  SizedBox(width: 5),
+                                                  CustomText(
+                                                    text: "Edit",
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        PopupMenuItem<int>(
-                                          value: 2,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: [
-                                              Icon(Icons.delete),
-                                              SizedBox(width: 5),
-                                              CustomText(
-                                                text: "Delete",
+                                            ),
+                                            PopupMenuItem<int>(
+                                              value: 2,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Icon(Icons.delete),
+                                                  SizedBox(width: 5),
+                                                  CustomText(
+                                                    text: "Delete",
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                      onSelected: (item) async {
-                                        if (item == 0) {
-                                          await taskController
-                                              .cancleNotification(int.parse(
-                                                  taskController
+                                            ),
+                                          ],
+                                          onSelected: (item) async {
+                                            if (item == 0) {
+                                              await taskController
+                                                  .cancleNotification(int.parse(
+                                                      taskController
+                                                          .tasks[index].taskId
+                                                          .toString()));
+                                              TaskModel taskObj = TaskModel();
+                                              taskObj =
+                                                  taskController.tasks[index];
+                                              taskObj.isActive = 0;
+                                              taskObj.isRepeat = 0;
+
+                                              await taskController
+                                                  .editTask(taskObj);
+                                              taskController.fetchTasks();
+                                            }
+                                            if (item == 1) {
+                                              Get.to(() => add_Remainders(),
+                                                  arguments: {
+                                                    "testArg": taskController
+                                                        .tasks[index],
+                                                  });
+                                            }
+                                            if (item == 2) {
+                                              await taskController
+                                                  .cancleNotification(int.parse(
+                                                      taskController
+                                                          .tasks[index].taskId
+                                                          .toString()));
+                                              await taskController.deleteTask(
+                                                  int.parse(taskController
                                                       .tasks[index].taskId
                                                       .toString()));
-                                          TaskModel taskObj = TaskModel();
-                                          taskObj = taskController.tasks[index];
-                                          taskObj.isActive = 0;
-                                          taskObj.isRepeat = 0;
-                                          // taskObj.taskId =
-                                          //     taskController.tasks[index].taskId;
-                                          // taskObj.time =
-                                          //     taskController.tasks[index].time;
-                                          // taskObj.updatedTime = taskController
-                                          //     .tasks[index].updatedTime;
-                                          await taskController
-                                              .editTask(taskObj);
-                                          taskController.fetchTasks();
-                                        }
-                                        if (item == 2) {
-                                          await taskController
-                                              .cancleNotification(int.parse(
-                                                  taskController
+                                              taskController.fetchTasks();
+                                            }
+                                          },
+                                        )
+                                      : PopupMenuButton(
+                                          icon: Icon(Icons.more_vert),
+                                          color: white,
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem<int>(
+                                              value: 0,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Icon(Icons.delete),
+                                                  SizedBox(width: 5),
+                                                  CustomText(
+                                                    text: "Delete",
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                          onSelected: (item) async {
+                                            if (item == 0) {
+                                              await taskController
+                                                  .cancleNotification(int.parse(
+                                                      taskController
+                                                          .tasks[index].taskId
+                                                          .toString()));
+                                              await taskController.deleteTask(
+                                                  int.parse(taskController
                                                       .tasks[index].taskId
                                                       .toString()));
-                                          await taskController.deleteTask(
-                                              int.parse(taskController
-                                                  .tasks[index].taskId
-                                                  .toString()));
-                                          taskController.fetchTasks();
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                              taskController.fetchTasks();
+                                            }
+                                          },
+                                        ),
+                                ],
+                              ),
+                              Visibility(
+                                visible:
+                                    (taskController.tasks[index].description ==
+                                                null ||
+                                            taskController
+                                                    .tasks[index].description ==
+                                                "")
+                                        ? false
+                                        : true,
+                                child: Text(
+                                  taskController.tasks[index].description
+                                      .toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 13),
                                 ),
                               ),
                               SizedBox(
                                 height: 5,
                               ),
-                              taskController.tasks[index].description == ""
-                                  ? Text("")
-                                  : IntrinsicHeight(
-                                      child: Row(
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        children: [
-                                          Icon(
-                                            Icons.description_outlined,
-                                            color: green,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              taskController
-                                                  .tasks[index].description
-                                                  .toString(),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                              Divider(),
                               IntrinsicHeight(
                                 child: Row(
-                                  // ignore: prefer_const_literals_to_create_immutables
                                   children: [
                                     Icon(
                                       Icons.category,
                                       color: green,
+                                      size: 18,
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -228,6 +255,7 @@ Widget list(int flag) {
                                     Icon(
                                       Icons.calendar_today,
                                       color: green,
+                                      size: 18,
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -245,6 +273,7 @@ Widget list(int flag) {
                                     Icon(
                                       Icons.watch_later_sharp,
                                       color: green,
+                                      size: 18,
                                     ),
                                     SizedBox(
                                       width: 5,

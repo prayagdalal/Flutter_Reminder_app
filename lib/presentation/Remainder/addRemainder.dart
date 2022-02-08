@@ -184,7 +184,8 @@ class add_Remainders extends StatelessWidget {
                     taskobj.updatedTime =
                         updatedDate == null ? '' : updatedDate.toString();
                     taskobj.isActive = 1;
-                    taskobj.description=addTaskController.reminderNoteController.text;
+                    taskobj.description =
+                        addTaskController.reminderNoteController.text;
                     taskobj.isRepeat =
                         settingController.repeatflag == true ? 1 : 0;
                     taskobj.isSnoozed =
@@ -232,7 +233,7 @@ checkStatus() {
     addTaskController.category.value = taskobj.categoryName.toString();
     addTaskController.reminderType.value = taskobj.reminderType.toString();
     addTaskController.reminderNoteController.text =
-        taskobj.description.toString();
+        taskobj.description == null ? "" : taskobj.description.toString();
     settingController.repeatflag.value = taskobj.isRepeat == 1 ? true : false;
     settingController.snoozeflag.value = taskobj.isSnoozed == 1 ? true : false;
     if (taskobj.reminderType.toString() == 'Minute') {

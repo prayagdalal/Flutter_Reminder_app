@@ -3,9 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:reminder_app/controller/add_taskController.dart';
-import 'package:reminder_app/controller/setting_controller.dart';
 import 'package:reminder_app/model/taskModel.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/custom.dart';
 import 'package:reminder_app/presentation/Remainder/repeating_type_widget/every_widget.dart';
@@ -246,32 +244,40 @@ Widget remainder_body(ctx, TaskModel taskobj) {
                     SizedBox(
                       height: 8,
                     ),
-                    ListTile(
-                        onTap: null,
-                        contentPadding: EdgeInsets.zero,
-                        //leading: Icon(Icons.snooze_outlined),
-                        title: CustomText(
-                          text: "Snooze",
-                          weight: FontWeight.w500,
-                        ),
-                        dense: true,
-                        trailing: Obx(() => Switch(
-                            value: settingController.snoozeflag.value,
-                            onChanged: (val) {
-                              settingController.snoozechange();
-                              print(settingController.snoozeflag);
-                            }))),
-                    Visibility(
-                      visible: true,
-                      child: Column(
-                        children:
-                            // ignore: prefer_const_literals_to_create_immutables
-                            [
-                          // addRadioButton(0, '1 Minutes', '1 Minutes'),
-                          // addRadioButton(1, '5 Minutes', '5 Minutes'),
-                        ],
-                      ),
-                    ),
+                    // ListTile(
+                    //     onTap: null,
+                    //     contentPadding: EdgeInsets.zero,
+                    //     //leading: Icon(Icons.snooze_outlined),
+                    //     title: CustomText(
+                    //       text: "Snooze",
+                    //       weight: FontWeight.w500,
+                    //     ),
+                    //     dense: true,
+                    //     trailing: Obx(() => Switch(
+                    //         value: settingController.snoozeflag.value,
+                    //         onChanged: (val) {
+                    //           settingController.snoozechange();
+                    //           print(settingController.snoozeflag.value);
+                    //         }))),
+
+                    // // ==================== My code is start here........  ===================================
+                    // Obx(
+                    //   () => Visibility(
+                    //     visible: settingController.snoozeflag.value,
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //       children:
+                    //           // ignore: prefer_const_literals_to_create_immutables
+                    //           [
+                    //         snooz_type("5", settingController.min5.value),
+                    //         snooz_type("10", settingController.min10.value),
+                    //         snooz_type("15", settingController.min15.value)
+                    //       ],
+                    //     ),
+                    //   ),
+                    // )
+
+// ==================== My code is end here........  ===================================
                   ],
                 ),
               ),
@@ -305,6 +311,31 @@ InputDecoration getTextBorder() {
     ),
   );
 }
+
+//  my code start here =============================
+Widget snooz_type(txt, value) {
+  return GestureDetector(
+    onTap: () {
+      settingController.checksnooztype(txt);
+    },
+    child: Container(
+      height: 40,
+      decoration: value
+          ? BoxDecoration(borderRadius: BorderRadius.circular(5), color: green)
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: green, width: 2)),
+      width: 50,
+      child: Center(
+          child: Text(
+        '${txt} Min',
+        style: TextStyle(color: value ? Colors.white : Colors.black),
+      )),
+    ),
+  );
+}
+
+//  my code start here =============================
 
 Widget _renderWidget(ctx, TaskModel taskobj) {
   if (addTaskController.reminderType.value == "Daily")

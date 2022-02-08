@@ -25,7 +25,9 @@ Widget list(int flag) {
       alignment: Alignment.topCenter,
       child: ListView.builder(
           shrinkWrap: true,
+          //scrollDirection: Axis.vertical,
           reverse: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: taskController.tasks.length,
           itemBuilder: (BuildContext context, int index) {
             return taskController.tasks[index].isActive == flag
@@ -40,9 +42,40 @@ Widget list(int flag) {
                       elevation: 0,
                       child: InkWell(
                         onTap: () {
-                          Get.to(() => add_Remainders(), arguments: {
-                            "testArg": taskController.tasks[index],
-                          });
+                          Get.defaultDialog(
+                            backgroundColor: Colors.transparent,
+                            title: "",
+                            barrierDismissible: true,
+                            content: AlertDialog(
+                                insetPadding: EdgeInsets.zero,
+                                scrollable: true,
+                                content: Column(
+                                  children: [
+                                    CustomText(
+                                      text: taskController
+                                          .tasks[index].taskTitle
+                                          .toString(),
+                                      size: 20,
+                                      color: black,
+                                    ),
+                                    SizedBox(
+                                      height: 17,
+                                    ),
+                                    Text(
+                                      taskController.tasks[index].description
+                                          .toString(),
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    child: Text("OK"),
+                                  )
+                                ]),
+                          );
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(
@@ -62,96 +95,164 @@ Widget list(int flag) {
                                       size: 18,
                                     ),
                                     Spacer(),
-                                    PopupMenuButton(
-                                      icon: Icon(Icons.more_vert),
-                                      color: white,
-                                      itemBuilder: (context) => [
-                                        PopupMenuItem<int>(
-                                          value: 0,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: [
-                                              Icon(Icons.check),
-                                              SizedBox(width: 5),
-                                              CustomText(
-                                                text: "Mark as Done",
+                                    flag == 1
+                                        ? PopupMenuButton(
+                                            icon: Icon(Icons.more_vert),
+                                            color: white,
+                                            itemBuilder: (context) => [
+                                              PopupMenuItem<int>(
+                                                value: 0,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  // ignore: prefer_const_literals_to_create_immutables
+                                                  children: [
+                                                    Icon(Icons.check),
+                                                    SizedBox(width: 5),
+                                                    CustomText(
+                                                      text: "Mark as Done",
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              PopupMenuItem<int>(
+                                                value: 1,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  // ignore: prefer_const_literals_to_create_immutables
+                                                  children: [
+                                                    Icon(Icons.edit),
+                                                    SizedBox(width: 5),
+                                                    CustomText(
+                                                      text: "Edit",
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              PopupMenuItem<int>(
+                                                value: 2,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  // ignore: prefer_const_literals_to_create_immutables
+                                                  children: [
+                                                    Icon(Icons.delete),
+                                                    SizedBox(width: 5),
+                                                    CustomText(
+                                                      text: "Delete",
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ],
-                                          ),
-                                        ),
-                                        PopupMenuItem<int>(
-                                          value: 1,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: [
-                                              Icon(Icons.edit),
-                                              SizedBox(width: 5),
-                                              CustomText(
-                                                text: "Edit",
+                                            onSelected: (item) async {
+                                              if (item == 0) {
+                                                await taskController
+                                                    .cancleNotification(
+                                                        int.parse(taskController
+                                                            .tasks[index].taskId
+                                                            .toString()));
+                                                TaskModel taskObj = TaskModel();
+                                                taskObj =
+                                                    taskController.tasks[index];
+                                                taskObj.isActive = 0;
+                                                taskObj.isRepeat = 0;
+                                                // taskObj.taskId =
+                                                //     taskController.tasks[index].taskId;
+                                                // taskObj.time =
+                                                //     taskController.tasks[index].time;
+                                                // taskObj.updatedTime = taskController
+                                                //     .tasks[index].updatedTime;
+                                                await taskController
+                                                    .editTask(taskObj);
+                                                taskController.fetchTasks();
+                                              }
+                                              if (item == 1) {
+                                                Get.to(() => add_Remainders(),
+                                                    arguments: {
+                                                      "testArg": taskController
+                                                          .tasks[index],
+                                                    });
+                                              }
+                                              if (item == 2) {
+                                                await taskController
+                                                    .cancleNotification(
+                                                        int.parse(taskController
+                                                            .tasks[index].taskId
+                                                            .toString()));
+                                                await taskController.deleteTask(
+                                                    int.parse(taskController
+                                                        .tasks[index].taskId
+                                                        .toString()));
+                                                taskController.fetchTasks();
+                                              }
+                                            },
+                                          )
+                                        : PopupMenuButton(
+                                            icon: Icon(Icons.more_vert),
+                                            color: white,
+                                            itemBuilder: (context) => [
+                                              PopupMenuItem<int>(
+                                                value: 0,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  // ignore: prefer_const_literals_to_create_immutables
+                                                  children: [
+                                                    Icon(Icons.delete),
+                                                    SizedBox(width: 5),
+                                                    CustomText(
+                                                      text: "Delete",
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ],
+                                            onSelected: (item) async {
+                                              if (item == 0) {
+                                                await taskController
+                                                    .cancleNotification(
+                                                        int.parse(taskController
+                                                            .tasks[index].taskId
+                                                            .toString()));
+                                                await taskController.deleteTask(
+                                                    int.parse(taskController
+                                                        .tasks[index].taskId
+                                                        .toString()));
+                                                taskController.fetchTasks();
+                                              }
+                                            },
                                           ),
-                                        ),
-                                        PopupMenuItem<int>(
-                                          value: 2,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: [
-                                              Icon(Icons.delete),
-                                              SizedBox(width: 5),
-                                              CustomText(
-                                                text: "Delete",
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                      onSelected: (item) async {
-                                        if (item == 0) {
-                                          await taskController
-                                              .cancleNotification(int.parse(
-                                                  taskController
-                                                      .tasks[index].taskId
-                                                      .toString()));
-                                          TaskModel taskObj = TaskModel();
-                                          taskObj = taskController.tasks[index];
-                                          taskObj.isActive = 0;
-                                          taskObj.isRepeat = 0;
-                                          // taskObj.taskId =
-                                          //     taskController.tasks[index].taskId;
-                                          // taskObj.time =
-                                          //     taskController.tasks[index].time;
-                                          // taskObj.updatedTime = taskController
-                                          //     .tasks[index].updatedTime;
-                                          await taskController
-                                              .editTask(taskObj);
-                                          taskController.fetchTasks();
-                                        }
-                                        if (item == 2) {
-                                          await taskController
-                                              .cancleNotification(int.parse(
-                                                  taskController
-                                                      .tasks[index].taskId
-                                                      .toString()));
-                                          await taskController.deleteTask(
-                                              int.parse(taskController
-                                                  .tasks[index].taskId
-                                                  .toString()));
-                                          taskController.fetchTasks();
-                                        }
-                                      },
-                                    ),
                                   ],
                                 ),
                               ),
                               SizedBox(
                                 height: 5,
+                              ),
+                              IntrinsicHeight(
+                                child: Row(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    Icon(
+                                      Icons.description_outlined,
+                                      color: green,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        taskController.tasks[index].description
+                                            .toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 17,
                               ),
                               IntrinsicHeight(
                                 child: Row(

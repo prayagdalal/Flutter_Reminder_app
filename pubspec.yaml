@@ -52,6 +52,7 @@ dependencies:
   #flutter_foreground_service_plugin: ^0.1.7
   #flutter_foreground_plugin:
   #  path: ./flutter_foreground_service
+  pull_to_refresh: ^2.0.0
 
 splash_screen_view:
   color: "#ffffff"

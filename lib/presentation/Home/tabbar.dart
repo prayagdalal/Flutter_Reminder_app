@@ -1,9 +1,27 @@
 // ignore_for_file: prefer_const_constructors, duplicate_ignore
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:reminder_app/utills/colors.dart';
+import '../../main.dart';
 import 'activeList.dart';
+
 Widget tabBar() {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    taskController.fetchTasks();
+    _refreshController.loadComplete();
+  }
+
   return DefaultTabController(
     length: 2,
     child: Column(
@@ -35,7 +53,15 @@ Widget tabBar() {
             child: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
-            list(1),
+            SmartRefresher(
+                controller: _refreshController,
+                enablePullDown: true,
+                enablePullUp: false,
+                header: WaterDropHeader(),
+                dragStartBehavior: DragStartBehavior.start,
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                child: list(1)),
             list(0),
           ],
         ))

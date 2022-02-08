@@ -11,6 +11,38 @@ class SettingController extends GetxController {
   var vibrationflag = true.obs;
   var defaultTime = ''.obs;
   var taskTIme = ''.obs;
+  // my changes start here =================
+  var min5 = true.obs;
+  var min10 = false.obs;
+  var min15 = false.obs;
+
+  @override
+  void onInit() {
+    getSessionValue();
+    snoozeflag.value = false;
+    repeatflag.value = false;
+    super.onInit();
+  }
+  checksnooztype(value) {
+    if (value == "5") {
+      min5.value = true;
+      min10.value = false;
+      min15.value = false;
+    }
+    else if (value == "10") {
+      min5.value = false;
+      min10.value = true;
+      min15.value = false;
+    }
+    else if (value == "15") {
+      min5.value = false;
+      min10.value = false;
+      min15.value = true;
+    }
+  }
+
+  //  my chnages end here ==========================
+  
   void snoozechange() {
     snoozeflag.value = !snoozeflag.value;
   }
@@ -29,13 +61,6 @@ class SettingController extends GetxController {
     return TimeOfDay.fromDateTime(format.parse(tod));
   }
 
-  @override
-  void onInit() {
-    getSessionValue();
-    snoozeflag.value = false;
-    repeatflag.value = false;
-    super.onInit();
-  }
 
   getSessionValue() {
     SharedPrefrences.getSession('default_time').then((value) {

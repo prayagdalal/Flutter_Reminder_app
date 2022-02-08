@@ -65,43 +65,8 @@ Widget settinglists(ctx) {
                     color: green,
                   ))),
         ),
-        Card(
-          elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          color: white,
-          child: ListTile(
-              onTap: () {},
-              leading: Icon(Icons.snooze),
-              title: CustomText(
-                text: "Default Snooze",
-                weight: FontWeight.w500,
-              ),
-              dense: true,
-              trailing: Obx(() => Switch(
-                  value: settingController.snoozeflag.value,
-                  onChanged: (val) {
-                    settingController.snoozechange();
-                  }))),
-        ),
-        Card(
-            elevation: 0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            color: white,
-            child: ListTile(
-                onTap: () {},
-                leading: Icon(Icons.vibration),
-                title: CustomText(
-                  text: "Vibration",
-                  weight: FontWeight.w500,
-                ),
-                dense: true,
-                trailing: Obx(() => Switch(
-                    value: settingController.vibrationflag.value,
-                    onChanged: (val) {
-                      settingController.vibrationchange();
-                    })))),
+       
+        
         Card(
           elevation: 0,
           shape:

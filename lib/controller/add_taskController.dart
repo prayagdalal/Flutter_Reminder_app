@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../main.dart';
 
 class AddTaskController extends GetxController {
@@ -28,6 +27,19 @@ class AddTaskController extends GetxController {
     update();
   }
 
+  @override
+  void onInit() {
+    currentTime.value = DateTime.now().toString();
+    selectedDateController.text = '';
+    customFromController.text = '';
+    customToController.text = '';
+    customTimeController.text = '';
+    frequencyController.text = '1';
+    reminderTitleController.text = '';
+    reminderNoteController.text = '';
+    minuteController.text = '1';
+    super.onInit();
+  }
   void setCategory(String value) {
     category.value = value;
   }
@@ -46,19 +58,6 @@ class AddTaskController extends GetxController {
     settingController.taskTIme.value = ''.toString();
   }
 
-  @override
-  void onInit() {
-    currentTime.value = DateTime.now().toString();
-    selectedDateController.text = '';
-    customFromController.text = '';
-    customToController.text = '';
-    customTimeController.text = '';
-    frequencyController.text = '1';
-    reminderTitleController.text = '';
-    reminderNoteController.text = '';
-    minuteController.text = '1';
-    super.onInit();
-  }
 
   @override
   void dispose() {

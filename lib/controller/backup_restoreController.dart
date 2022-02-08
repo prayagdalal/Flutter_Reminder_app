@@ -1,13 +1,10 @@
-import 'dart:convert';
+// ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:get/get.dart';
-
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
-
-// import 'package:backup_restore/show_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:google_sign_in/google_sign_in.dart';
@@ -74,6 +71,7 @@ class backupRestoreController extends GetxController {
                         )
                       : AlertDialog(
                           content: Row(
+                            // ignore: prefer_const_literals_to_create_immutables
                             children: [
                               Icon(
                                 Icons.download_rounded,
@@ -118,7 +116,6 @@ class backupRestoreController extends GetxController {
             taskModelRawList.forEach((taskModelRawElement) {
               TaskModel taskModelObj = TaskModel.fromJson(taskModelRawElement);
               DBProvider.db.addTask(taskModelObj);
-              // DBProvider.db.getTaskList();
             });
           }
           progressdialog.value = false;
@@ -132,7 +129,7 @@ class backupRestoreController extends GetxController {
           );
         });
       } catch (e) {
-        print(e);
+ 
       }
     } else {
       Get.defaultDialog(

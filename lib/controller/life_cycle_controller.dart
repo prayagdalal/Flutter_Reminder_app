@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_is_empty
 
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -12,22 +11,22 @@ import '../main.dart';
 class LifeCycleController extends SuperController {
   @override
   void onDetached() {
-    callInLoop();
+    //  callInLoop();
   }
 
   @override
   void onInactive() {
-    callInLoop();
+    // callInLoop();
   }
 
   @override
   void onPaused() {
-    callInLoop();
+    //callInLoop();
   }
 
   @override
   void onResumed() {
-    callInLoop();
+    //callInLoop();
   }
 
   void callInLoop() async {
@@ -73,7 +72,7 @@ class LifeCycleController extends SuperController {
                 int.parse(taskController.tasks[i].taskId.toString()),
                 int.parse(taskController.tasks[i].customMinute.toString()),
                 taskController.tasks[i].taskTitle.toString(),
-                'please check app');
+                'From getX LifeCycle');
             taskController.fetchTasks();
           } else if ((taskController.tasks[i].reminderType == 'Hourly' &&
                   taskController.tasks[i].customHour != null &&
@@ -105,7 +104,7 @@ class LifeCycleController extends SuperController {
                 int.parse(taskController.tasks[i].taskId.toString()),
                 int.parse(taskController.tasks[i].customHour.toString()),
                 taskController.tasks[i].taskTitle.toString(),
-                'please check app');
+                'From getX LifeCycle');
             taskController.fetchTasks();
           } else if ((taskController.tasks[i].reminderType == 'Weekly' &&
                   taskController.tasks[i].customWeek != null &&
@@ -137,7 +136,7 @@ class LifeCycleController extends SuperController {
                 int.parse(taskController.tasks[i].taskId.toString()),
                 int.parse(taskController.tasks[i].customWeek.toString()),
                 taskController.tasks[i].taskTitle.toString(),
-                'please check app');
+                'From getX LifeCycle');
             taskController.fetchTasks();
           } else if ((taskController.tasks[i].reminderType == 'Daily' &&
                   taskController.tasks[i].customDay != null &&
@@ -168,7 +167,7 @@ class LifeCycleController extends SuperController {
                 int.parse(taskController.tasks[i].taskId.toString()),
                 int.parse(taskController.tasks[i].customDay.toString()),
                 taskController.tasks[i].taskTitle.toString(),
-                'please check app');
+                'From getX LifeCycle');
             taskController.fetchTasks();
           }
         }

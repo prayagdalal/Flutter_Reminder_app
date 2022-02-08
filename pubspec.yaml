@@ -48,7 +48,11 @@ dependencies:
   connectivity_wrapper: ^1.0.6
   android_alarm_manager_plus: ^2.0.4
   splash_screen_view: ^3.0.0
-  
+  flutter_foreground_plugin: ^0.8.0
+  #flutter_foreground_service_plugin: ^0.1.7
+  #flutter_foreground_plugin:
+  #  path: ./flutter_foreground_service
+
 splash_screen_view:
   color: "#ffffff"
   # The following adds the Cupertino Icons font to your application.

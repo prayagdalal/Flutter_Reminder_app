@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:reminder_app/controller/task_controller.dart';
-import 'package:reminder_app/model/taskModel.dart';
-import 'package:reminder_app/presentation/Remainder/addRemainder.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
 
@@ -36,8 +34,6 @@ class SearchBarPage extends StatelessWidget {
                 ? Text("Search")
                 : Text(taskController.searchValue.value.toString()),
             actions: [
-              //custome_popupmenu()
-
               PopupMenuButton(
                   icon: Icon(Icons.category, color: white),
                   color: white,
@@ -53,7 +49,6 @@ class SearchBarPage extends StatelessWidget {
                       .toList(),
                   onSelected: (item) async {
                     taskController.setSearchValue(item.toString());
-
                     await taskController.fetchSearchTasks(
                         catName: item.toString());
                   })

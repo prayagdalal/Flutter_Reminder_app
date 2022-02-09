@@ -2,16 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:reminder_app/controller/add_taskController.dart';
-import 'package:reminder_app/controller/backup_restoreController.dart';
 import 'package:reminder_app/controller/setting_controller.dart';
 import 'package:reminder_app/main.dart';
-import 'package:reminder_app/network/session.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
 
 var settingController = Get.put(SettingController());
-var backup_restoreController = Get.put(backupRestoreController());
 
 class SettingPage extends StatelessWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -48,8 +44,7 @@ Widget settinglists(ctx) {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           color: white,
-          child:
-           ListTile(
+          child: ListTile(
               onTap: () {
                 selectTime(ctx);
                 // showTimePicker(context: ctx, initialTime: TimeOfDay.now());
@@ -65,8 +60,6 @@ Widget settinglists(ctx) {
                     color: green,
                   ))),
         ),
-       
-        
         Card(
           elevation: 0,
           shape:
@@ -90,7 +83,7 @@ Widget settinglists(ctx) {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              backup_restoreController.uploadToGoogleDrive();
+                              backuprestoreController.uploadToGoogleDrive();
                             },
                             child: SizedBox(
                               height: 100,
@@ -114,12 +107,13 @@ Widget settinglists(ctx) {
                           ),
                           GestureDetector(
                             onTap: () {
-                              backup_restoreController.downloadandsavefile();
+                              backuprestoreController.downloadandsavefile();
                             },
                             child: Container(
                               height: 100,
                               width: 120,
                               child: Column(
+                                // ignore: prefer_const_literals_to_create_immutables
                                 children: [
                                   Icon(
                                     Icons.restore,
@@ -181,7 +175,6 @@ selectTime(BuildContext ctx) async {
         .parse(picked.hour.toString() + ":" + picked.minute.toString());
     var dateFormat = DateFormat("h:mm a");
     settingController.defaultTime.value = dateFormat.format(tempDate);
-    // print(settingController.defaultTime.value);
     taskController.setSession(dateFormat.format(tempDate));
   }
 }

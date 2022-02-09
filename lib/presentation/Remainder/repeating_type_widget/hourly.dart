@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_app/utills/colors.dart';
-import 'package:reminder_app/utills/customtext.dart';
+import '../../../utills/colors.dart';
+import '../../../utills/customtext.dart';
 Widget hour_type()
 {
   return  Column(

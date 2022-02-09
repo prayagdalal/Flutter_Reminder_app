@@ -40,7 +40,6 @@ class TaskController extends GetxController {
   }
 
   getLastInsertedId() async {
-    // print(DBProvider.db.getLastInsertedRowId());
     return await DBProvider.db.getLastInsertedRowId();
   }
 
@@ -57,8 +56,6 @@ class TaskController extends GetxController {
   }
 
   addNewTask(TaskModel taskobj) async {
-    print('in insert');
-    print(taskobj);
     await DBProvider.db.addTask(taskobj);
   }
 
@@ -76,8 +73,6 @@ class TaskController extends GetxController {
   }
 
   fetchSearchTasks({catName}) async {
-    print("Fetch search");
-    print(catName);
     if (catName == null || catName == "") {
       DBProvider.db.getTaskList().then((value) {
         searchData.value = value;
@@ -85,7 +80,6 @@ class TaskController extends GetxController {
     } else {
       DBProvider.db.getTaskByCat(catName).then((taskList) {
         searchData.value = taskList;
-        print(searchData);
       });
     }
   }

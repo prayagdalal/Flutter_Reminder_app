@@ -23,7 +23,6 @@ class add_Remainders extends StatelessWidget {
 
     var data = Get.arguments;
     taskobj = data['testArg'];
-    print(taskobj.toJson().toString());
     WidgetsBinding.instance?.addPostFrameCallback((_) => checkStatus());
 
     return Form(
@@ -63,15 +62,11 @@ class add_Remainders extends StatelessWidget {
                   color: white,
                 ),
                 onPressed: () async {
-                  print(addTaskController.frequencyController.text);
                   var custom_week;
                   var custom_minute;
                   var custom_hour;
                   DateTime weekIntoSecond;
                   if (formKey.currentState!.validate()) {
-                    // print(addTaskController.reminderTitleController.text);
-                    // print(addTaskController.category);
-                    // print(addTaskController.reminderType);
                     if (addTaskController.frequencyController.text.isNotEmpty) {
                       int seconds = Duration(
                               seconds: int.parse(
@@ -92,14 +87,9 @@ class add_Remainders extends StatelessWidget {
                       else if (custom_week == 4) custom_week = 28;
                       int weekIntoSecond =
                           Duration(days: custom_week).inSeconds;
-                      print(weekIntoSecond);
-                      print(now);
-                      print('-------------Weekly--------------------');
+
                       updatedDate = now.add(Duration(seconds: weekIntoSecond));
-                      print(updatedDate);
                       SharedPrefrences.getSession('default_time').then((value) {
-                        print('insesssion');
-                        print(value);
                         var finaldefaultTime = DateFormat.jm().parse(value);
                         var newHour = finaldefaultTime.hour;
                         var newMinute = finaldefaultTime.minute;
@@ -114,11 +104,7 @@ class add_Remainders extends StatelessWidget {
                             updatedDate.millisecond,
                             updatedDate.microsecond);
 
-                        print(updatedDate);
-                        print(weekIntoSecond);
-                        print('-------++--------------');
                         weekIntoSecond = updatedDate.difference(now).inSeconds;
-                        print(weekIntoSecond);
                         taskobj.customWeek = weekIntoSecond;
                       });
                     }
@@ -128,11 +114,9 @@ class add_Remainders extends StatelessWidget {
                           int.parse(addTaskController.frequencyController.text);
                       int minuteIntoSecond =
                           Duration(minutes: custom_minute).inSeconds;
-                      print(now);
-                      print('----------------Minute-----------------');
+
                       updatedDate =
                           now.add(Duration(seconds: minuteIntoSecond));
-                      print(updatedDate);
                       taskobj.customMinute = minuteIntoSecond;
                     }
 
@@ -141,17 +125,12 @@ class add_Remainders extends StatelessWidget {
                           int.parse(addTaskController.frequencyController.text);
                       int hourIntoSecond =
                           Duration(hours: custom_hour).inSeconds;
-                      print(hourIntoSecond);
-                      print(now);
-                      print('----------------Hourly-----------------');
+
                       updatedDate = now.add(Duration(seconds: hourIntoSecond));
-                      print(updatedDate);
                       taskobj.customHour = hourIntoSecond;
                     }
 
                     if (addTaskController.reminderType.value == 'Daily') {
-                      print(now);
-                      print('----------------Daily-----------------');
                       updatedDate = now.add(Duration(seconds: 86400));
                       var finaldefaultTime = DateFormat.jm()
                           .parse(settingController.defaultTime.toString());
@@ -168,10 +147,9 @@ class add_Remainders extends StatelessWidget {
                           updatedDate.millisecond,
                           updatedDate.microsecond);
 
-                      print(updatedDate);
                       int dailyIntoSecond;
                       dailyIntoSecond = updatedDate.difference(now).inSeconds;
-                      print(dailyIntoSecond);
+
                       taskobj.customDay = dailyIntoSecond;
                       taskobj.selectedDays =
                           settingController.defaultTime.toString();
@@ -206,11 +184,6 @@ class add_Remainders extends StatelessWidget {
                           difference,
                           addTaskController.reminderTitleController.text,
                           'Reminder');
-                      print(
-                          '-------ALARM WILL PLAYS ON--------------------------' +
-                              updatedDate.toString() +
-                              '----------AFTER SECONDS:-----------' +
-                              difference.toString());
                     }
                     taskController.fetchTasks();
                     Get.back();
@@ -262,14 +235,5 @@ checkStatus() {
     if (taskobj.reminderType.toString() == 'Daily') {
       settingController.taskTIme.value = taskobj.selectedDays.toString();
     }
-
-    //       {"name": "Minute", "isSelected": false},
-    // {"name": "Hourly", "isSelected": false},
-    // {"name": "Daily", "isSelected": false},
-    // {"name": "Weekly", "isSelected": false},
-    // {"name": "Monthly", "isSelected": false},
-    // {"name": "Yearly", "isSelected": false},
-    // {"name": "Custom", "isSelected": false},
-
   }
 }

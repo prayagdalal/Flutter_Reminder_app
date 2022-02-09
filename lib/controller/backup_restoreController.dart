@@ -21,14 +21,12 @@ import 'package:reminder_app/utills/customtext.dart';
 final controllers = Get.put(TaskController());
 // final taskController = Get.put(TaskController());f
 
-class backupRestoreController extends GetxController {
+class BackupRestoreController extends GetxController {
   bool _loginStatus = false;
-
   bool isloading = false;
   String googledriveurl = '';
   double progress = 0;
   var progressdialog = true.obs;
-
   final googleSignIn = GoogleSignIn.standard(scopes: [
     drive.DriveApi.driveAppdataScope,
     drive.DriveApi.driveFileScope,
@@ -102,7 +100,7 @@ class backupRestoreController extends GetxController {
 
         List<int> dataStore = [];
         mediaStream!.stream.listen((data) {
-          print("DataReceived: ${data.length}");
+          //  print("DataReceived: ${data.length}");
           dataStore.addAll(data);
         }, onDone: () async {
           Directory tempDir = await p.getApplicationSupportDirectory();
@@ -119,8 +117,8 @@ class backupRestoreController extends GetxController {
             });
           }
           progressdialog.value = false;
-          TaskController().fetchTasks();
-          Timer(Duration(seconds: 4), () {
+          taskController.fetchTasks();
+          Timer(Duration(seconds: 2), () {
             Get.back();
           });
         }, onError: (error) {
@@ -128,9 +126,7 @@ class backupRestoreController extends GetxController {
             title: Text("Error"),
           );
         });
-      } catch (e) {
- 
-      }
+      } catch (e) {}
     } else {
       Get.defaultDialog(
           backgroundColor: Colors.transparent,
@@ -159,7 +155,7 @@ class backupRestoreController extends GetxController {
     if (await ConnectivityWrapper.instance.isConnected) {
       if (taskController.tasks.length >= 1) {
         DBProvider.db.getdatabaselist();
-
+        //print('In BAckUp');
         progressdialog.value = true;
 
         final driveApi = await _getDriveApi();
@@ -198,7 +194,7 @@ class backupRestoreController extends GetxController {
                               SizedBox(
                                 width: 7,
                               ),
-                              Text("Backup successfull"),
+                              Text("Backup successful"),
                             ],
                           ),
                         ),
@@ -231,7 +227,7 @@ class backupRestoreController extends GetxController {
             return;
           }
           String contents = name;
-          print(contents);
+          //print(contents);
           final Stream<List<int>> mediaStream =
               Future.value(contents.codeUnits).asStream().asBroadcastStream();
 
@@ -245,7 +241,7 @@ class backupRestoreController extends GetxController {
           final response =
               await driveApi.files.create(driveFile, uploadMedia: media);
           progressdialog.value = false;
-          Timer(Duration(seconds: 4), () {
+          Timer(Duration(seconds: 2), () {
             Get.back();
           });
         } catch (e) {}
@@ -350,7 +346,7 @@ class backupRestoreController extends GetxController {
 
 class GoogleAuthClient extends http.BaseClient {
   final Map<String, String> _headers;
-  final _client = new http.Client();
+  final _client = http.Client();
 
   GoogleAuthClient(this._headers);
 

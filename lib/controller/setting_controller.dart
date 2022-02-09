@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:reminder_app/network/session.dart';
-import 'package:reminder_app/presentation/settings/setting.dart';
+import '../network/session.dart';
+import '../presentation/settings/setting.dart';
 
 class SettingController extends GetxController {
   var snoozeflag = true.obs;

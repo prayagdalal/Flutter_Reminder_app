@@ -45,38 +45,7 @@ Widget daily_type(BuildContext context, TaskModel taskobj) {
               ),
             ),
           ),
-          // ListTile(
-          //     onTap: () {
-          //       selectTime(context);
-          //       // showTimePicker(context: ctx, initialTime: TimeOfDay.now());
-          //     },
-          //     leading: Icon(Icons.av_timer),
-          //     title: CustomText(
-          //       text: "Set Default Time",
-          //       weight: FontWeight.w500,
-          //     ),
-          //     dense: true,
-          //     trailing: Obx(() => CustomText(
-          //           text: settingController.defaultTime.toString(),
-          //           color: green,
-          //         ))),
-          // CustomText(
-          //   text: "Every",
-          // ),
-          // Container(
-          //   width: 130,
-          //   child: TextFormField(
-          //     maxLength: 2,
-          //     decoration: InputDecoration(
-          //       enabledBorder: UnderlineInputBorder(
-          //         borderSide: BorderSide(color: green),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // CustomText(
-          //   text: "Day",
-          // ),
+         
         ],
       )
     ],
@@ -95,7 +64,6 @@ selectTime(BuildContext ctx) async {
         .parse(picked.hour.toString() + ":" + picked.minute.toString());
     var dateFormat = DateFormat("h:mm a");
     settingController.defaultTime.value = dateFormat.format(tempDate);
-    // print(settingController.defaultTime.value);
     var taskController2 = taskController;
     taskController2.setSession(dateFormat.format(tempDate));
   }

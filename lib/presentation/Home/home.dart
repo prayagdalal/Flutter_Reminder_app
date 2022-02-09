@@ -12,7 +12,6 @@ import 'package:reminder_app/presentation/Home/tabbar.dart';
 import 'package:reminder_app/presentation/Remainder/addRemainder.dart';
 import 'package:reminder_app/utills/colors.dart';
 import 'package:reminder_app/utills/customtext.dart';
-
 import '../../main.dart';
 
 class Home extends StatelessWidget {
@@ -42,16 +41,6 @@ class Home extends StatelessWidget {
               color: white,
             ),
             onPressed: () {
-              //DBProvider.db.deleteTbl();
-              //Get.to(() => SearchBarPage());
-
-              var newHour = 5;
-              var time = DateTime.now();
-              print(time);
-              time = new DateTime(time.year, time.month, time.day, newHour,
-                  time.minute, time.second, time.millisecond, time.microsecond);
-
-              print(time);
               Get.to(() => SearchBarPage());
             },
           ),

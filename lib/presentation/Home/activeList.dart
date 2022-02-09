@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:reminder_app/model/taskModel.dart';
-import 'package:reminder_app/presentation/Remainder/addRemainder.dart';
-import 'package:reminder_app/utills/colors.dart';
-import 'package:reminder_app/utills/customtext.dart';
+import '../../model/taskModel.dart';
+import '../Remainder/addRemainder.dart';
+import '../../utills/colors.dart';
+import '../../utills/customtext.dart';
 
 import '../../main.dart';
 
@@ -224,6 +224,7 @@ Widget list(int flag) {
                                   taskController.tasks[index].description
                                       .toString(),
                                   overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                   style: TextStyle(
                                       fontStyle: FontStyle.italic,
                                       fontSize: 13),

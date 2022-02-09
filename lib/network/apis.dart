@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:reminder_app/model/taskModel.dart';
-import 'package:reminder_app/network/globalFile.dart';
+import '../model/taskModel.dart';
+import 'globalFile.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:convert' as convert;
 

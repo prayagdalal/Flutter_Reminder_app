@@ -16,19 +16,6 @@ import 'package:reminder_app/utills/customtext.dart';
 import '../../main.dart';
 import 'repeating_type_widget/daily.dart';
 
-List<dynamic> category = [
-  {"name": "Warrnty Card", "isSelected": false},
-  {"name": "Coupon", "isSelected": false},
-  {"name": "PUC", "isSelected": false},
-  {"name": "Property Rent", "isSelected": false},
-  {"name": "Premium", "isSelected": false},
-  {"name": "Bill Payment", "isSelected": false},
-  {"name": "Credit Card", "isSelected": false},
-  {"name": "Recharge", "isSelected": false},
-  {"name": "EMI", "isSelected": false},
-  {"name": "Loan", "isSelected": false}
-];
-
 var category1 = [
   "Warrnty Card",
   "Coupon",
@@ -47,18 +34,6 @@ var remindertype1 = [
   "Hourly",
   "Daily",
   "Weekly",
-  // "Monthly",
-  // "Yearly",
-  // "Custom"
-];
-List<dynamic> remindertype = [
-  {"name": "Minute", "isSelected": false},
-  {"name": "Hourly", "isSelected": false},
-  {"name": "Daily", "isSelected": false},
-  {"name": "Weekly", "isSelected": false},
-  {"name": "Monthly", "isSelected": false},
-  {"name": "Yearly", "isSelected": false},
-  {"name": "Custom", "isSelected": false},
 ];
 
 Widget remainder_body(ctx, TaskModel taskobj) {
@@ -239,7 +214,6 @@ Widget remainder_body(ctx, TaskModel taskobj) {
                             value: settingController.repeatflag.value,
                             onChanged: (val) {
                               settingController.repeatChange();
-                              print(settingController.repeatflag);
                             }))),
                     SizedBox(
                       height: 8,
@@ -313,7 +287,7 @@ InputDecoration getTextBorder() {
 }
 
 //  my code start here =============================
-Widget snooz_type(txt, value) {
+Widget snoozType(txt, value) {
   return GestureDetector(
     onTap: () {
       settingController.checksnooztype(txt);
@@ -353,13 +327,6 @@ Widget _renderWidget(ctx, TaskModel taskobj) {
   else
     return custom_type(ctx);
 }
-// "Minute",
-// "Hourly",
-// "Daily",
-// "Weekly",
-// "Monthly",
-// "Yearly",
-// "Custom"
 
 addRadioButton(int btnIndex, String title, String interval) {
   return Container(

@@ -87,18 +87,6 @@ class NotificationService {
     );
   }
 
-  // tz.TZDateTime _nextInstanceOfTenAM() {
-  //   final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-  //   tz.TZDateTime scheduledDate =
-  //       tz.TZDateTime.now(tz.local).add(Duration(seconds: 5));
-  //   // tz.TZDateTime(tz.local, now.year, now.month, now.day, 10);
-  //   if (scheduledDate.isAfter(now)) {
-  //     scheduledDate = scheduledDate.add(const Duration(seconds: 5));EEE
-  
-  //   }
-  //   return scheduledDate;
-  // }
-
   Future<void> cancelAllNotifications() async {
     await flutterLocalNotificationsPlugin.cancelAll();
   }

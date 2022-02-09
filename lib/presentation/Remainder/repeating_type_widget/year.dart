@@ -1,9 +1,9 @@
 import 'package:day_picker/day_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:reminder_app/presentation/Remainder/repeating_type_widget/every_widget.dart';
-import 'package:reminder_app/utills/colors.dart';
-import 'package:reminder_app/utills/customtext.dart';
+import 'every_widget.dart';
+import '../../../utills/colors.dart';
+import '../../../utills/customtext.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 List<Widget> date =

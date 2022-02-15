@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:reminder_app/core/app_export.dart';
-import 'package:reminder_app/presentation/setting_screen/controller/backup_restore_controller.dart';
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:get/get.dart';
@@ -19,43 +17,10 @@ import 'package:reminder_app/data/apiClient/api_client.dart';
 import 'package:reminder_app/main.dart';
 import 'package:reminder_app/presentation/home_screen/controller/home_controller.dart';
 
-class SettingScreenController extends GetxController {
-  var defaultTime = ''.obs;
-  var snoozeflag = true.obs;
-  var repeatflag = false.obs;
-  var vibrationflag = true.obs;
-  var taskTime = ''.obs;
+// final controllers = Get.put(HomeScreenController());
+// final taskController = Get.put(TaskController());f
 
-  late Rx<backupRestoreController> backController;
-
-  TimeOfDay stringToTimeOfDay(String tod) {
-    final format = DateFormat.jm(); //"6:00 AM"
-
-    return TimeOfDay.fromDateTime(format.parse(tod));
-  }
-
-  getSessionValue() {
-    SharedPrefrences.getSession('default_time').then((value) {
-      defaultTime.value = value;
-      taskTime.value = value;
-    });
-  }
-
-  TimeOfDay selectetime = TimeOfDay.now();
-  selectTime(BuildContext ctx) async {
-    final TimeOfDay? picked = await showTimePicker(
-        context: ctx, initialTime: stringToTimeOfDay(defaultTime.value));
-
-    if (picked != null && picked != selectetime) {
-      DateTime tempDate = DateFormat("hh:mm")
-          .parse(picked.hour.toString() + ":" + picked.minute.toString());
-      var dateFormat = DateFormat("h:mm a");
-      defaultTime.value = dateFormat.format(tempDate);
-      // print(settingController.defaultTime.value);
-      SharedPrefrences.setSession("SettingsKey", dateFormat.format(tempDate));
-    }
-  }
-
+class backupRestoreController extends GetxController {
   bool _loginStatus = false;
 
   bool isloading = false;
@@ -70,8 +35,6 @@ class SettingScreenController extends GetxController {
 
   @override
   void onInit() {
-    getSessionValue();
-    backController = backupRestoreController().obs;
     _loginStatus = googleSignIn.currentUser != null;
     super.onInit();
   }

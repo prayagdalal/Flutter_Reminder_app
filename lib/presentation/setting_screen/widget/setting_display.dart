@@ -66,8 +66,8 @@ class SettingBody extends GetWidget<SettingScreenController> {
                               onTap: () async {
                                 // Get.find<backupRestoreController>()
                                 //     .uploadToGoogleDrive();
-                                controller.backController.value
-                                    .uploadToGoogleDrive();
+                                // controller.backController.value
+                                // .uploadToGoogleDrive();
                               },
                               child: SizedBox(
                                 height: 100,

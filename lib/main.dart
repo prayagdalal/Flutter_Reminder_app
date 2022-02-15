@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:reminder_app/core/utils/color_constant.dart';
 import 'package:reminder_app/core/utils/image_constant.dart';
+import 'package:reminder_app/network/notification_service.dart';
 import 'package:reminder_app/presentation/home_screen/bottom_navbar/bottom_navbar.dart';
 import 'package:reminder_app/presentation/home_screen/home_screen.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 
 import 'core/app_export.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
   runApp(MyApp());
 }
 

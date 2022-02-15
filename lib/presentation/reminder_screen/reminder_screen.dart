@@ -192,6 +192,7 @@ class AddReminderScreen extends GetWidget<AddReminderController> {
                         .getLastInsertedId();
                     if (updatedDate != null || updatedDate != "") {
                       final difference = updatedDate.difference(now).inSeconds;
+                      print(difference);
                       Get.find<HomeScreenController>().showNotification(
                           lastInsertedId[0]['task_id'],
                           difference,

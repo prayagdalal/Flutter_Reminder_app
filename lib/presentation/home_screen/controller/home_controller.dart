@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reminder_app/core/app_export.dart';
 import 'package:reminder_app/data/apiClient/api_client.dart';
+import 'package:reminder_app/network/notification_service.dart';
 import 'package:reminder_app/presentation/home_screen/widgets/home_body.dart';
 import 'package:reminder_app/presentation/setting_screen/setting_screen.dart';
 
@@ -42,14 +43,15 @@ class HomeScreenController extends GetxController {
   }
 
   showNotification(int taskId, int seconds, String title, String body) async {
-    // await NotificationService().showNotification(taskId, title, body, seconds);
+    await NotificationService().showNotification(taskId, title, body, seconds);
   }
 
   repeatNotification() async {
-    // await NotificationService().repeatNotification();
+    await NotificationService().repeatNotification();
   }
+
   cancleNotification(int taskId) async {
-    // await NotificationService().cancelNotification(taskId);
+    await NotificationService().cancelNotification(taskId);
   }
 
   addNewTask(TaskModel taskobj) async {
